@@ -36,7 +36,7 @@
     </li>
 
     <li class="nav-item active">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="{{route('products.index')}}">
             <i class="fas fa-fw fa-window-restore"></i>
             <span>Product</span></a>
     </li>

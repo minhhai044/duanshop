@@ -60,6 +60,10 @@
                 <span>or use your account</span>
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Password" />
+                <div class="d-flex fs-6">
+                        <input style="width: 50px;height: 18px;" type="checkbox" name="remember" id="remember"> <label style="margin-top: 5px" for="remember">Nhớ tài khoản</label>
+                </div>
+                <a class="fs-6" href="{{route('password.request')}}">Forgot your password?</a>
                 <button type="submit">Sign In</button>
             </form>
         </div>

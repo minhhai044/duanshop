@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Login\UserController;
 use App\Http\Middleware\Isadmin;
 use App\Http\Middleware\Ismember;
+use GuzzleHttp\Middleware;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -69,11 +72,28 @@ Route::get('/thankyou', function () {
 
 
 
+
+
+
 //Login
 Route::get('login', [UserController::class, 'showform'])->name('login');
 Route::post('loginpost', [UserController::class, 'login'])->name('loginpost');
 Route::post('registerpost', [UserController::class, 'register'])->name('registerpost');
 Route::post('logout', [UserController::class, 'logout'])->name('logout');
+// Hiển thị form quên mật khẩu
+Route::get('forgot-password', [UserController::class,'formsendmail'])->middleware('guest')->name('password.request');
+
+// Xử lý yêu cầu gửi email đặt lại mật khẩu
+Route::post('forgot-password', [UserController::class, 'sendResetLinkEmail'])->middleware('guest')->name('password.email');
+// Hiển thị form đặt lại mật khẩu
+Route::get('reset-password/{token}', function ($token) {
+    return view('login.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+// Xử lý việc đặt lại mật khẩu
+Route::post('reset-password', [UserController::class, 'reset'])->middleware('guest')->name('password.update');
+
+
 
 
 // admin
@@ -83,7 +103,7 @@ Route::post('logout', [UserController::class, 'logout'])->name('logout');
  */
 Route::prefix('dashboard')->middleware(['auth', 'isadmin'])->group(function () {
     Route::get('/',         [AdminUserController::class, 'index'])->name('dashboard');
-    
+
     Route::get('/account',  [AdminUserController::class, 'list'])->name('dashboard.account');
 
     Route::get('/account/restore/{id}', [AdminUserController::class, 'restore'])->name('account.restore');
@@ -95,4 +115,7 @@ Route::prefix('dashboard')->middleware(['auth', 'isadmin'])->group(function () {
     Route::get('/account/downgrade/{id}', [AdminUserController::class, 'downgrade'])->name('account.downgrade');
 
     Route::get('/account/delete/{id}',     [AdminUserController::class, 'delete'])->name('account.delete');
+
+    Route::resource('products', ProductController::class);
+    
 });

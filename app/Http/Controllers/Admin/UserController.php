@@ -15,7 +15,7 @@ class UserController extends Controller
     public function list()
     {
         // List
-        $users = User::withTrashed()->get();
+        $users = User::query()->get();
 
         return view('admin.account', compact('users'));
     }

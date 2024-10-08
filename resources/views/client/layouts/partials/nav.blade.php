@@ -18,15 +18,19 @@
                 <li><a class="nav-link" href="{{ route('contact') }}">Contact</a></li>
             </ul>
             <ul class="navbar-nav mb-2 mb-md-0 ms-5 dropdown">
-                <li style="width: 34px; height:44px "><a class="nav-link " href="#"><img src="/client/images/search.svg"></a></li>
-                <li class="mx-3" style="width: 34px; height:44px "><a href="" class="nav-link" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><img src="/client/images/user.svg"></a>
+                <li style="width: 34px; height:44px "><a class="nav-link " href="#"><img
+                            src="/client/images/search.svg"></a></li>
+                <li class="mx-3" style="width: 34px; height:44px "><a href="" class="nav-link"
+                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><img
+                            src="/client/images/user.svg"></a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="#">My account</a></li>
-                        
+
+
                         @if (Auth::user())
-                        @if (Auth::user()->type === 'admin')
-                        <li><a class="dropdown-item" href="{{route('dashboard')}}">Dashboard admin</a></li>
-                        @endif
+                            @if (Auth::user()->type === 'admin')
+                                <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard admin</a></li>
+                            @endif
+                            <li><a class="dropdown-item" href="#">My account</a></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="post">
                                     @csrf
@@ -42,7 +46,8 @@
                     </ul>
                 </li>
 
-                <li style="width: 34px; height:44px "><a class="nav-link" href="{{ route('cart') }}"><img src="/client/images/cart.svg"></a></li>
+                <li style="width: 34px; height:44px "><a class="nav-link" href="{{ route('cart') }}"><img
+                            src="/client/images/cart.svg"></a></li>
             </ul>
         </div>
     </div>
