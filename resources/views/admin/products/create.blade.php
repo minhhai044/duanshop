@@ -22,6 +22,11 @@
                         </ul>
                     </div>
                 @endif
+                @if (session()->has('error'))
+                    <div class="alert alert-danger">
+                        {{session()->get('error')}}
+                    </div>
+                @endif
                 <div class="table-responsive">
                     <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -153,7 +158,7 @@
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1">Form Product</h4>
+                                        <h4 class="card-title mb-0 flex-grow-1">Form Tag</h4>
                                     </div><!-- end card header -->
                                     <div class="card-body">
 

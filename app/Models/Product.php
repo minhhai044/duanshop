@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $fillable = [
         'pro_name',
         'pro_sku',
@@ -19,7 +20,7 @@ class Product extends Model
         'pro_views',
         'category_id'
     ];
-    public function categories(){
+    public function category(){
         return $this->belongsTo(Category::class);
     }
     public function galleries()

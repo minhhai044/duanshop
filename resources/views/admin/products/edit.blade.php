@@ -8,7 +8,7 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <span style="font-size: 25px" class="m-0 font-weight-bold text-primary">Create Product</span>
+                <span style="font-size: 25px" class="m-0 font-weight-bold text-primary">Edit Product</span>
                 {{-- <a class="btn btn-primary" style="float: right" href="{{ route('products.create') }}" role="button">Thêm mới</a> --}}
 
             </div>
@@ -22,10 +22,15 @@
                         </ul>
                     </div>
                 @endif
+                @if (session()->has('error'))
+                    <div class="alert alert-danger">
+                        {{ session()->get('error') }}
+                    </div>
+                @endif
                 <div class="table-responsive">
-                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('products.update', $data) }}" method="POST" enctype="multipart/form-data">
                         @csrf
-
+                        @method('PUT')
 
                         {{-- @dd($data->category_id) --}}
                         <div class="row">
@@ -135,10 +140,10 @@
                                                                     </td>
                                                                     <td>
                                                                         @foreach ($product_variants as $item)
-                                                                            @if ($item->color_id ===$colorID && $item->capacity_id === $gbID )
-                                                                            <input type="number" class="form-control"
-                                                                            value="{{$item->quantity}}"
-                                                                            name="product_variants[{{ $gbID . '-' . $colorID }}][quantity]">
+                                                                            @if ($item->color_id === $colorID && $item->capacity_id === $gbID)
+                                                                                <input type="number" class="form-control"
+                                                                                    value="{{ $item->quantity }}"
+                                                                                    name="product_variants[{{ $gbID . '-' . $colorID }}][quantity]">
                                                                             @endif
                                                                         @endforeach
                                                                     </td>
@@ -162,14 +167,15 @@
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1">Form Product</h4>
+                                        <h4 class="card-title mb-0 flex-grow-1">Form Tag</h4>
                                     </div><!-- end card header -->
                                     <div class="card-body">
 
                                         <label for="tags" class="my-3">Tag</label>
                                         <select name="tags[]" multiple id="tags" class="form-control">
                                             @foreach ($tags as $id => $name)
-                                                <option @selected(in_array($id,$product_tags)) value="{{ $id }}">{{ $name }}</option>
+                                                <option @selected(in_array($id, $product_tags)) value="{{ $id }}">
+                                                    {{ $name }}</option>
                                             @endforeach
                                         </select>
 
@@ -189,7 +195,20 @@
                                     </div><!-- end card header -->
                                     <div class="card-body">
 
-                                        <div class="mb-3 row">
+                                        @foreach ($data->galleries as $item)
+                                            <label for="image_{{ $loop->iteration }}" class="my-3">Gallery
+                                                {{ $loop->iteration }}</label>
+                                            <input type="file" name="image_galleries[{{ $item->id }}]"
+                                                class="form-control p-1" id="image_{{ $loop->iteration }}">
+
+                                            @if ($item->image && Storage::exists($item->image))
+                                                <img src="{{ Storage::url($item->image) }}" width="100px"
+                                                    alt=""> <br>
+                                            @endif
+                                        @endforeach
+
+
+                                        {{-- <div class="mb-3 row">
                                             <label for="image_1" class="col-4 col-form-label">Gallery 1</label>
                                             <div class="col-8">
                                                 <input type="file" class="form-control p-1" name="image_galleries[]"
@@ -224,7 +243,7 @@
                                                 <input type="file" class="form-control p-1" name="image_galleries[]"
                                                     id="image_5" />
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                     </div>
                                 </div>
@@ -232,7 +251,7 @@
                             <!--end col-->
                         </div>
                         {{-- End Gallery --}}
-                        <button type="submit" class="btn btn-primary w-100 my-5">Thêm mới</button>
+                        <button type="submit" class="btn btn-primary w-100 my-5">Update</button>
                     </form>
 
                 </div>
