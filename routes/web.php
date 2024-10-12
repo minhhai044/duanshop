@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\CapacityController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Login\UserController;
@@ -117,5 +120,11 @@ Route::prefix('dashboard')->middleware(['auth', 'isadmin'])->group(function () {
     Route::get('/account/delete/{id}',     [AdminUserController::class, 'delete'])->name('account.delete');
 
     Route::resource('products', ProductController::class);
+
+    Route::resource('capacities',CapacityController::class);
+
+    Route::resource('categories',CategoryController::class);
+
+    Route::resource('colors',ColorController::class);
     
 });

@@ -30,11 +30,20 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item active">
-        <a class="nav-link " href="tables.html">
-            <i class="fas fa-fw fa-folder"></i>
+        <a class="nav-link " href="{{route('categories.index')}}">
+            <i class="fas fa-fw fa-list"></i>
             <span>Category</span></a>
     </li>
-
+    <li class="nav-item active">
+        <a class="nav-link " href="{{route('capacities.index')}}">
+            <i class="fas fa-fw fa-folder"></i>
+            <span>Capacity</span></a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link " href="{{route('colors.index')}}">
+            <i class="fas fa-fw fa-tag"></i>
+            <span>Color</span></a>
+    </li>
     <li class="nav-item active">
         <a class="nav-link" href="{{route('products.index')}}">
             <i class="fas fa-fw fa-window-restore"></i>
