@@ -14,12 +14,12 @@ class ProductVariant extends Model
         'capacity_id',
         'quantity'
     ];
-    public function capatities()
+    public function capacity()
     {
         return $this->belongsTo(Capacity::class);
     }
 
-    public function colors()
+    public function color()
     {
         return $this->belongsTo(Color::class);
     }

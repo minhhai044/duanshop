@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Client\GeneralController;
 use App\Http\Controllers\Login\UserController;
 use App\Http\Middleware\Isadmin;
 use App\Http\Middleware\Ismember;
@@ -27,54 +28,24 @@ Route::get('/', function () {
     return view('client.index');
 })->name('index');
 
-Route::get('/shop', function () {
-    return view('client.shop');
-})->name('shop');
-
-
-Route::get('/about', function () {
-    return view('client.about');
-})->name('about');
-
-
-Route::get('/blog', function () {
-    return view('client.blog');
-})->name('blog');
 
 
 
-Route::get('/cart', function () {
-    return view('client.cart');
-})->name('cart');
+Route::prefix('/')->group(function () {
+    Route::get('/', [GeneralController::class, 'index'])->name('index');
+    Route::get('shop', [GeneralController::class, 'shop'])->name('shop');
 
+    Route::get('{detail}/detail', [GeneralController::class, 'detail'])->name('detail');
+    Route::post('addcart', [GeneralController::class, 'addcart'])->name('addcart');
 
-
-Route::get('/checkout', function () {
-    return view('client.checkout');
-})->name('checkout');
-
-
-
-Route::get('/contact', function () {
-    return view('client.contact');
-})->name('contact');
-
-
-
-
-Route::get('/services', function () {
-    return view('client.services');
-})->name('services');
-
-
-
-Route::get('/thankyou', function () {
-    return view('client.thankyou');
-})->name('thankyou');
-
-
-
-
+    Route::get('about', [GeneralController::class, 'about'])->name('about');
+    Route::get('blog', [GeneralController::class, 'blog'])->name('blog');
+    Route::get('cart', [GeneralController::class, 'cart'])->name('cart');
+    Route::get('checkout', [GeneralController::class, 'checkout'])->name('checkout');
+    Route::get('contact', [GeneralController::class, 'contact'])->name('contact');
+    Route::get('services', [GeneralController::class, 'services'])->name('services');
+    Route::get('thankyou', [GeneralController::class, 'thankyou'])->name('thankyou');
+});
 
 
 
@@ -84,7 +55,7 @@ Route::post('loginpost', [UserController::class, 'login'])->name('loginpost');
 Route::post('registerpost', [UserController::class, 'register'])->name('registerpost');
 Route::post('logout', [UserController::class, 'logout'])->name('logout');
 // Hiển thị form quên mật khẩu
-Route::get('forgot-password', [UserController::class,'formsendmail'])->middleware('guest')->name('password.request');
+Route::get('forgot-password', [UserController::class, 'formsendmail'])->middleware('guest')->name('password.request');
 
 // Xử lý yêu cầu gửi email đặt lại mật khẩu
 Route::post('forgot-password', [UserController::class, 'sendResetLinkEmail'])->middleware('guest')->name('password.email');
@@ -121,10 +92,9 @@ Route::prefix('dashboard')->middleware(['auth', 'isadmin'])->group(function () {
 
     Route::resource('products', ProductController::class);
 
-    Route::resource('capacities',CapacityController::class);
+    Route::resource('capacities', CapacityController::class);
 
-    Route::resource('categories',CategoryController::class);
+    Route::resource('categories', CategoryController::class);
 
-    Route::resource('colors',ColorController::class);
-    
+    Route::resource('colors', ColorController::class);
 });
