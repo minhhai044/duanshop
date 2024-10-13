@@ -31,8 +31,8 @@ class GeneralController extends Controller
             'tags',
             'product_variant'
         )->find($id);
-        $colors = Color::query()->get();
-        $Capacities = Capacity::query()->get();
+        $colors = Color::query()->pluck('color_name','id')->all();
+        $Capacities = Capacity::query()->pluck('cap_name','id')->all();
         $variants = ProductVariant::with('capacity', 'color')->where('product_id', $id)->get();
         // dd($variants->toArray());
         return view('client.detail', compact(
@@ -42,9 +42,7 @@ class GeneralController extends Controller
             'Capacities'
         ));
     }
-    public function addcart(StoreAddCartRequest $request) {
-        dd($request);
-    }
+    
 
 
 
@@ -72,10 +70,7 @@ class GeneralController extends Controller
     {
         return view('client.blog');
     }
-    public function cart()
-    {
-        return view('client.cart');
-    }
+    
     public function checkout()
     {
         return view('client.checkout');

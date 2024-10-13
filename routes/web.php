@@ -5,8 +5,10 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\GeneralController;
 use App\Http\Controllers\Login\UserController;
+use App\Http\Middleware\CheckQuantityProductCart;
 use App\Http\Middleware\Isadmin;
 use App\Http\Middleware\Ismember;
 use GuzzleHttp\Middleware;
@@ -36,11 +38,14 @@ Route::prefix('/')->group(function () {
     Route::get('shop', [GeneralController::class, 'shop'])->name('shop');
 
     Route::get('{detail}/detail', [GeneralController::class, 'detail'])->name('detail');
-    Route::post('addcart', [GeneralController::class, 'addcart'])->name('addcart');
+
+    Route::post('addcart', [CartController::class, 'addcart'])->name('addcart')->middleware([CheckQuantityProductCart::class,'auth']);
+    Route::get('{listcart}/listcart', [CartController::class, 'listcart'])->name('listcart');
+
 
     Route::get('about', [GeneralController::class, 'about'])->name('about');
     Route::get('blog', [GeneralController::class, 'blog'])->name('blog');
-    Route::get('cart', [GeneralController::class, 'cart'])->name('cart');
+   
     Route::get('checkout', [GeneralController::class, 'checkout'])->name('checkout');
     Route::get('contact', [GeneralController::class, 'contact'])->name('contact');
     Route::get('services', [GeneralController::class, 'services'])->name('services');
