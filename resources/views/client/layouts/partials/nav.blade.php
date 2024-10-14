@@ -46,8 +46,7 @@
                     </ul>
                 </li>
 
-                <li style="width: 34px; height:44px "><a class="nav-link" href="{{ route('listcart',Auth::user()->id) }}"><img
-                            src="/client/images/cart.svg"></a></li>
+                <li style="width: 34px; height:44px "><a class="nav-link" href="{{ route('listcart') }}"><img src="/client/images/cart.svg"></a></li>
             </ul>
         </div>
     </div>

@@ -2,3 +2,4 @@
 <script src="/client/js/tiny-slider.js"></script>
 <script src="/client/js/custom.js"></script>
 <script src="/client/js/active.js"></script>
+<script src="/client/js/quantity_cart.js"></script>

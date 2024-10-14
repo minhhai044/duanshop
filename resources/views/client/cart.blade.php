@@ -30,7 +30,19 @@
     <div class="untree_co-section before-footer-section">
         <div class="container">
             <div class="row mb-5">
+                @if (session()->has('success'))
+                    <div class="alert alert-success">
+                        {{ session()->get('success') }}
+                    </div>
+                @endif
+
+                @if (session()->has('error'))
+                    <div class="alert alert-danger">
+                        {{ session()->get('error') }}
+                    </div>
+                @endif
                 <form class="col-md-12" method="post">
+                    @csrf
                     <div class="site-blocks-table">
                         <table class="table">
                             <thead>
@@ -46,68 +58,88 @@
                                 </tr>
                             </thead>
                             <tbody>
-{{-- @dd($productVariant) --}}
-                                    @foreach ($productVariant as $item)
-                                        <tr>
-                                            <td class="product-thumbnail">
-                                                @if ($item->product->pro_img_thumbnail)
-                                                    <img src="{{ Storage::url($item->product->pro_img_thumbnail) }}" width="80px"
-                                                        height="80px" alt="Image" class="img-fluid">
+                                {{-- @dd($productVariants) --}}
+                                @foreach ($productVariants as $item)
+                                    <tr>
+                                        <td class="product-thumbnail">
+                                            @if ($item->product->pro_img_thumbnail)
+                                                <img src="{{ Storage::url($item->product->pro_img_thumbnail) }}"
+                                                    width="80px" height="80px" alt="Image" class="img-fluid">
+                                            @endif
+                                        </td>
+                                        <td class="product-name">
+                                            <h2 class="h5 text-black">{{ $item->product->pro_name }}</h2>
+                                        </td>
+                                        @if ($item->product->pro_price_sale)
+                                            <td style="width: 140px">{{ number_format($item->product->pro_price_sale) }} đ
+                                            </td>
+                                        @else
+                                            <td style="width: 140px">{{ number_format($item->product->pro_price_regular) }}
+                                                đ
+                                            </td>
+                                        @endif
+
+                                        <td>
+                                            <p>{{ $item->capacity->cap_name }}</p>
+                                        </td>
+                                        <td>
+                                            <p>{{ $item->color->color_name }}</p>
+                                        </td>
+                                        <td>
+                                            <div class="input-group mb-3 d-flex align-items-center quantity-container"
+                                                style="max-width: 120px;">
+
+
+                                                <input min="1" max="{{ $item->quantity }}" type="number"
+                                                    class="form-control p-2 text-center"
+                                                    @foreach ($item->cartitem as $value)
+                                                        @if ($value->cart_id == $item->cart_id)
+                                                            value="{{ $value->cart_item_quantity }}" 
+                                                        @endif @endforeach>
+
+
+                                            </div>
+
+
+                                        </td>
+
+                                        @if (!empty($item->product->pro_price_sale))
+                                            @foreach ($item->cartitem as $value)
+                                                @if ($value->cart_id == $item->cart_id)
+                                                    <td style="width: 140px">
+                                                        {{ number_format($item->product->pro_price_sale * $value->cart_item_quantity) }}
+                                                        đ
+                                                    </td>
                                                 @endif
-                                            </td>
-                                            <td class="product-name">
-                                                <h2 class="h5 text-black">{{ $item->product->pro_name }}</h2>
-                                            </td>
-                                            @if ($item->product->pro_price_sale)
-                                                <td style="width: 140px">{{ number_format($item->product->pro_price_sale) }} đ</td>
-                                            @else
-                                                <td style="width: 140px">{{ number_format($item->product->pro_price_regular) }} đ
-                                                </td>
-                                            @endif
+                                            @endforeach
+                                        @else
+                                            @foreach ($item->cartitem as $value)
+                                                @if ($value->cart_id == $item->cart_id)
+                                                    <td style="width: 140px">
+                                                        {{ number_format($item->product->pro_price_regular * $value->cart_item_quantity) }}
+                                                        đ
+                                                    </td>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                        <td>
+                                            @foreach ($item->cartitem as $value)
+                                                @if ($value->cart_id == $item->cart_id)
+                                                    <form action="{{ route('cart.delete', $value) }}" method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-black btn-sm">X</button>
+                                                    </form>
+                                                @endif
+                                            @endforeach
 
-                                            <td>
-                                                <p>{{ $item->capacity->cap_name }}</p>
-                                            </td>
-                                            <td>
-                                                <p>{{ $item->color->color_name}}</p>
-                                            </td>
-                                            <td>
-                                                <div class="input-group mb-3 d-flex align-items-center quantity-container"
-                                                    style="max-width: 120px;">
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-outline-black decrease"
-                                                            type="button">&minus;</button>
-                                                    </div>
-
-                                                    <input type="text"
-                                                        class="form-control p-2 text-center quantity-amount"
-                                                        value="{{ $item->cartitem->cart_item_quantity }}" placeholder=""
-                                                        aria-label="Example text with button addon"
-                                                        aria-describedby="button-addon1">
-
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-outline-black increase"
-                                                            type="button">&plus;</button>
-                                                    </div>
-                                                </div>
-
-                                            </td>
-                                            @if ($item['pro_price_sale'])
-                                                <td style="width: 140px">
-                                                    {{ number_format($item->product->pro_price_sale * $item->cartitem->cart_item_quantity) }} đ
-                                                </td>
-                                            @else
-                                                <td style="width: 140px">
-                                                    {{ number_format($item->product->pro_price_regular * $item->cartitem->cart_item_quantity)}}đ
-                                                </td>
-                                            @endif
-                                            <td><a href="#" class="btn btn-black btn-sm">X</a></td>
-                                        </tr>
-                                    @endforeach
-                        
+                                        </td>
+                                    </tr>
+                                @endforeach
 
 
-                          
+
+
                             </tbody>
                         </table>
                     </div>
@@ -118,10 +150,11 @@
                 <div class="col-md-6">
                     <div class="row mb-5">
                         <div class="col-md-6 mb-3 mb-md-0">
-                            <button class="btn btn-black btn-sm btn-block">Update Cart</button>
+                            <a href=""><button class="btn btn-black btn-sm btn-block">Update Cart</button></a>
                         </div>
                         <div class="col-md-6">
-                            <button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button>
+                            <a href="{{ route('shop') }}"><button class="btn btn-outline-black btn-sm btn-block">Continue
+                                    Shopping</button></a>
                         </div>
                     </div>
                     <div class="row">
