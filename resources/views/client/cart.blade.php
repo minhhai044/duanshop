@@ -46,21 +46,22 @@
                     @endif
 
                     <div class="site-blocks-table">
-                        @foreach ($productVariants as $item)
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="product-thumbnail">Image</th>
-                                        <th class="product-name">Product</th>
-                                        <th class="product-price">Price</th>
-                                        <th class="product-price">Capacity</th>
-                                        <th class="product-price">Color</th>
-                                        <th class="product-quantity">Quantity</th>
-                                        <th class="product-total">Total</th>
-                                        <th class="product-remove">Remove</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="product-thumbnail">Image</th>
+                                    <th class="product-name">Product</th>
+                                    <th class="product-price">Price</th>
+                                    <th class="product-price">Capacity</th>
+                                    <th class="product-price">Color</th>
+                                    <th class="product-quantity">Quantity</th>
+                                    <th class="product-total">Total</th>
+                                    <th class="product-remove">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($productVariants as $item)
                                     <tr>
                                         <td class="product-thumbnail">
                                             @if ($item->product->pro_img_thumbnail)
@@ -104,10 +105,6 @@
 
 
                                             </div>
-
-
-
-
                                         </td>
 
                                         @if (!empty($item->product->pro_price_sale))
@@ -148,9 +145,10 @@
                                         @csrf
                                         @method('DELETE')
                                     </form>
+                                @endforeach
+                            </tbody>
+                        </table>
 
-                                </tbody>
-                            </table>
                     </div>
 
                 </div>
@@ -160,12 +158,11 @@
                         <div class="row mb-5">
                             <div class="col-md-6 mb-3 mb-md-0">
                                 <button onclick="return confirm('Bạn có chắc chắn xóa tất cả không !!!')" type="submit"
-                                    id="submitButton" class="btn btn-black btn-sm btn-block">Delete
+                                    id="submitButton" class="btn btn-success btn-block">Delete
                                     Cart</button></a>
                             </div>
                             <div class="col-md-6">
-                                <a href="{{ route('shop') }}"><button
-                                        class="btn btn-outline-black btn-sm btn-block">Continue
+                                <a href="{{ route('shop') }}"><button class="btn btn-success btn-block">Continue
                                         Shopping</button></a>
                             </div>
                         </div>
@@ -215,7 +212,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <a href="{{ route('checkout') }}"><button
-                                                class="btn btn-black btn-lg py-3 btn-block">Proceed To Checkout</button></a>
+                                                class="btn btn-success py-3 w-90 ">Proceed To Checkout</button></a>
                                     </div>
                                 </div>
                             </div>
@@ -223,20 +220,17 @@
 
                     </div>
                 </div>
-            @endforeach
-        @else
-            <div class="text-center">
-                <img src="{{ '/client/images/Cart-empty-v2.webp' }}" width="300px" alt="">
-                <p class="mt-3">Giỏ hàng của bạn đang trống.</p>
-                <p> Hãy chọn thêm sản phẩm để mua sắm nhé</p>
+            @else
+                <div class="text-center">
+                    <img src="{{ '/client/images/Cart-empty-v2.webp' }}" width="300px" alt="">
+                    <p class="mt-3">Giỏ hàng của bạn đang trống.</p>
+                    <p> Hãy chọn thêm sản phẩm để mua sắm nhé</p>
 
-                <a href="{{ route('shop') }}"><button class="btn btn-outline-black btn-sm btn-block">Continue
-                        Shopping</button></a>
+                    <a href="{{ route('shop') }}"><button class="btn btn-success">Continue
+                            Shopping</button></a>
 
-            </div>
+                </div>
             @endif
-
-
 
         </div>
     </div>

@@ -160,7 +160,7 @@
                                     </div>
 
                                     <div class="form-group mt-4">
-                                        <button class="btn btn-black btn-lg py-3 btn-block">Place Order</button>
+                                        <button class="btn btn-success py-3 w-100 btn-block">Place Order</button>
                                     </div>
 
                                 </div>
@@ -173,4 +173,5 @@
             </div>
         </form>
     </div>
+   
 @endsection

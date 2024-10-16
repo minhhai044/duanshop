@@ -23,7 +23,6 @@ class CartController extends Controller
             'capacity_id' => $request->capacity_id,
             'product_id' => $request->id
         ])->first();
-
         $dataCartItem = [
             'product_variant_id' => $productVariant->id,
             'cart_item_quantity' => $request->quantity
