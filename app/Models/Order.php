@@ -56,4 +56,5 @@ class Order extends Model
         'status_payment',
         'order_total_price',
     ];
+    
 }

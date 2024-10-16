@@ -78,7 +78,6 @@
                     </div>
 
                     <input type="text" hidden name="id" value="{{ $dataDetails->id }}">
-                    <input type="text" hidden name="user_id" value="{{ Auth::user()->id }}">
                     <!-- Add to Cart Button -->
                     <div class="mt-4">
                         <button class="btn btn-success rounded-pill shadow">Add to Cart</button>

@@ -17,7 +17,7 @@ class OrderItem extends Model
         'product_img_thumbnail',
         'pro_price_regular',
         'pro_price_sale',
-        'variant_size_name',
+        'variant_capacity_name',
         'variant_color_name',
     ];
 }

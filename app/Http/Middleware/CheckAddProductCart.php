@@ -7,6 +7,7 @@ use App\Models\CartItem;
 use App\Models\ProductVariant;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckAddProductCart
@@ -23,12 +24,16 @@ class CheckAddProductCart
             ['color_id', $request->color_id],
             ['product_id', $request->id],
         ])->first();
-        $cart = Cart::query()->where('user_id', $request->user_id)->first();
+        $user_id = Auth::user()->id;
+        $cart = Cart::query()->where('user_id', $user_id)->first();
 
-        $cartItem = CartItem::query()->where([
-            ['product_variant_id', $productVariant->id],
-            ['cart_id', $cart->id]
-        ])->first();
+        if ($cart) {
+            $cartItem = CartItem::query()->where([
+                ['product_variant_id', $productVariant->id],
+                ['cart_id', $cart->id]
+            ])->first();
+        }
+
 
         if (empty($cartItem)) {
             $quantityCartItem = 0;

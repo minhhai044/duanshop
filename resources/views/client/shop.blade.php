@@ -3,8 +3,11 @@
     Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co
 @endsection
 @section('content')
+
     <div class="untree_co-section product-section before-footer-section">
+        
         <div class="container">
+            <h3 class="mb-4 container">Products List</h3>
             <div class="row">
 
                 @foreach ($products as $item)

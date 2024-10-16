@@ -7,9 +7,12 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\GeneralController;
+use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Login\UserController;
 use App\Http\Middleware\CheckAddProductCart;
+use App\Http\Middleware\CheckQuantityCheckOutCart;
 use App\Http\Middleware\CheckQuantityProductCart;
+use App\Http\Middleware\CheckQuantityUpdateCart;
 use App\Http\Middleware\Isadmin;
 use App\Http\Middleware\Ismember;
 use GuzzleHttp\Middleware;
@@ -40,14 +43,29 @@ Route::prefix('/')->group(function () {
 
     Route::get('{detail}/detail', [GeneralController::class, 'detail'])->name('detail');
 
+
+
+
+
+
+
+
     Route::post('addcart', [CartController::class, 'addcart'])->name('addcart')->middleware([ 'auth',CheckQuantityProductCart::class,CheckAddProductCart::class]);
     Route::get('listcart', [CartController::class, 'listcart'])->name('listcart')->middleware('auth');
     Route::delete('{cartitem}/cartitemdelete', [CartController::class, 'cartItemDelete'])->name('cart.delete');
+    Route::delete('{cartitem}/cartitemdeleteall',[CartController::class,'cartitemdeleteall'])->name('cart.delete.all');
+    Route::get('checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::post('checkout', [OrderController::class, 'storeCheckout'])->name('store.checkout')->middleware(CheckQuantityCheckOutCart::class);
+
+
+
+
+
 
     Route::get('about', [GeneralController::class, 'about'])->name('about');
     Route::get('blog', [GeneralController::class, 'blog'])->name('blog');
 
-    Route::get('checkout', [GeneralController::class, 'checkout'])->name('checkout');
+
     Route::get('contact', [GeneralController::class, 'contact'])->name('contact');
     Route::get('services', [GeneralController::class, 'services'])->name('services');
     Route::get('thankyou', [GeneralController::class, 'thankyou'])->name('thankyou');

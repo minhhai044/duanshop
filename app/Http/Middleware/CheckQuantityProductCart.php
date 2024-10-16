@@ -16,12 +16,12 @@ class CheckQuantityProductCart
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $id = $request->id;
+        $idProduct = $request->id;
         $capacity_id = $request->capacity_id;
         $color_id = $request->color_id;
         $quantity = $request->quantity;
 
-        $variants = ProductVariant::with('capacity', 'color', 'product')->where('product_id', $id)->get();
+        $variants = ProductVariant::with('capacity', 'color', 'product')->where('product_id', $idProduct)->get();
         // dd($variants->toArray());
         foreach ($variants as $item) {
             if ($item->color_id ==  $color_id && $item->capacity_id == $capacity_id) {

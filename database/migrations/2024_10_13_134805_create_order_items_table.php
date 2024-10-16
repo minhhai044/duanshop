@@ -28,7 +28,7 @@ return new class extends Migration
             $table->decimal('pro_price_sale', 10, 2)->nullable();
 
             // Sao lưu thông tin biến thể
-            $table->string('variant_size_name');
+            $table->string('variant_capacity_name');
             $table->string('variant_color_name');
 
             $table->timestamps();
