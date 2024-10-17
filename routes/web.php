@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CapacityController;
+use App\Http\Controllers\Admin\CartController as AdminCartController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\ProductController;
@@ -37,7 +38,7 @@ Route::get('/', function () {
 
 
 
-Route::prefix('/')->group(function () {
+    Route::prefix('/')->group(function () {
     Route::get('/', [GeneralController::class, 'index'])->name('index');
     Route::get('shop', [GeneralController::class, 'shop'])->name('shop');
 
@@ -50,10 +51,10 @@ Route::prefix('/')->group(function () {
 
 
 
-    Route::post('addcart', [CartController::class, 'addcart'])->name('addcart')->middleware([ 'auth',CheckQuantityProductCart::class,CheckAddProductCart::class]);
+    Route::post('addcart', [CartController::class, 'addcart'])->name('addcart')->middleware(['auth', CheckQuantityProductCart::class, CheckAddProductCart::class]);
     Route::get('listcart', [CartController::class, 'listcart'])->name('listcart')->middleware('auth');
     Route::delete('{cartitem}/cartitemdelete', [CartController::class, 'cartItemDelete'])->name('cart.delete');
-    Route::delete('{cartitem}/cartitemdeleteall',[CartController::class,'cartitemdeleteall'])->name('cart.delete.all');
+    Route::delete('{cartitem}/cartitemdeleteall', [CartController::class, 'cartitemdeleteall'])->name('cart.delete.all');
     Route::get('checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('checkout', [OrderController::class, 'storeCheckout'])->name('store.checkout')->middleware(CheckQuantityCheckOutCart::class);
 
@@ -121,4 +122,10 @@ Route::prefix('dashboard')->middleware(['auth', 'isadmin'])->group(function () {
     Route::resource('categories', CategoryController::class);
 
     Route::resource('colors', ColorController::class);
+
+    Route::get('cart',  [AdminCartController::class, 'listcart'])->name('dashboard.cart');
+    Route::get('{cart}/cart',  [AdminCartController::class, 'showCart'])->name('cart.show');
+    Route::put('{cart}/update',  [AdminCartController::class, 'updateCart'])->name('cart.update');
+    Route::put('{cart}/cancelCart',  [AdminCartController::class, 'cancelCart'])->name('cart.cancel');
+
 });

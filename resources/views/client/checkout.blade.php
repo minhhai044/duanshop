@@ -146,14 +146,14 @@
                                         <h4 class="text-black">Phương thức thanh toán</h4>
                                         <div class="mt-3">
 
-                                            {{-- @foreach ($METHOD_PAYMENT as $item) --}}
+
                                             <input checked type="radio" name="method_payment" value="cash_delivery"
                                                 id="">
-                                            {{ $METHOD_PAYMENT['cash_delivery'] }} <br>
+                                            {{ methodPayment(METHOD_PAYMENT_DELIVERY) }} <br>
                                             <input type="radio" name="method_payment" value="vnpay_payment"
                                                 id="">
-                                            {{ $METHOD_PAYMENT['vnpay_payment'] }}
-                                            {{-- @endforeach --}}
+                                            {{ methodPayment(METHOD_PAYMENT_VNPAY) }}
+
 
 
                                         </div>
@@ -173,5 +173,5 @@
             </div>
         </form>
     </div>
-   
+
 @endsection

@@ -55,5 +55,10 @@
             <i class="fas fa-fw fa-table"></i>
             <span>Account</span></a>
     </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{{route('dashboard.cart')}}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Cart</span></a>
+    </li>
 
 </ul>

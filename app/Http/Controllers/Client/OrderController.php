@@ -51,9 +51,8 @@ class OrderController extends Controller
             }
         }
 
-        $METHOD_PAYMENT = Order::METHOD_PAYMENT;
 
-        return view('client.checkout', compact('productVariants', 'total', 'METHOD_PAYMENT',));
+        return view('client.checkout', compact('productVariants', 'total'));
     }
 
     public function storeCheckout(CheckOutRequest $request)
