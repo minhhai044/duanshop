@@ -30,7 +30,7 @@
     <div class="untree_co-section before-footer-section">
         <div class="container">
 
-            {{-- @dd($productVariants) --}}
+            {{-- @dd(($productVariants)) --}}
             @if (!empty($productVariants))
                 <div class="row mb-5">
                     @if (session()->has('success'))

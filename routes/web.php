@@ -11,6 +11,7 @@ use App\Http\Controllers\Client\GeneralController;
 use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Login\UserController;
 use App\Http\Middleware\CheckAddProductCart;
+use App\Http\Middleware\CheckMyOrder;
 use App\Http\Middleware\CheckQuantityCheckOutCart;
 use App\Http\Middleware\CheckQuantityProductCart;
 use App\Http\Middleware\CheckQuantityUpdateCart;
@@ -31,14 +32,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('client.index');
-})->name('index');
 
 
 
-
-    Route::prefix('/')->group(function () {
+Route::prefix('/')->group(function () {
     Route::get('/', [GeneralController::class, 'index'])->name('index');
     Route::get('shop', [GeneralController::class, 'shop'])->name('shop');
 
@@ -58,13 +55,13 @@ Route::get('/', function () {
     Route::get('checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('checkout', [OrderController::class, 'storeCheckout'])->name('store.checkout')->middleware(CheckQuantityCheckOutCart::class);
 
-
-
+    Route::get('listorders', [OrderController::class, 'listorders'])->name('listorders')->middleware(['auth']);
+    Route::get('{order}/orders', [OrderController::class, 'showOrders'])->name('show.orders')->middleware('auth');
+    Route::put('{order}/orders', [OrderController::class, 'ordersCancel'])->name('orders.cancel');
 
 
 
     Route::get('about', [GeneralController::class, 'about'])->name('about');
-    Route::get('blog', [GeneralController::class, 'blog'])->name('blog');
 
 
     Route::get('contact', [GeneralController::class, 'contact'])->name('contact');
@@ -127,5 +124,4 @@ Route::prefix('dashboard')->middleware(['auth', 'isadmin'])->group(function () {
     Route::get('{cart}/cart',  [AdminCartController::class, 'showCart'])->name('cart.show');
     Route::put('{cart}/update',  [AdminCartController::class, 'updateCart'])->name('cart.update');
     Route::put('{cart}/cancelCart',  [AdminCartController::class, 'cancelCart'])->name('cart.cancel');
-
 });

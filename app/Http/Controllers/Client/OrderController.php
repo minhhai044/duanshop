@@ -113,4 +113,41 @@ class OrderController extends Controller
             return back();
         }
     }
+    public function listorders()
+    {
+        $listOrders  = Order::with('orderItems', 'user')->where('user_id', Auth::user()->id)->latest('id')->paginate(5);
+        return view('client.order', compact('listOrders'));
+    }
+    public function showOrders(string $id)
+    {
+        $data = Order::with('orderItems', 'user')->findOrFail($id);
+
+        return view('client.show', compact('data'));
+    }
+    public function ordersCancel(Request $request, string $id)
+    {
+        try {
+            DB::transaction(function () use ($request, $id) {
+                $order = Order::with('orderItems', 'user')->findOrFail($id);
+                if ($request->status_order === STATUS_ORDER_PENDING) {
+                    $order->update([
+                        'status_order' => STATUS_ORDER_CANCELED
+                    ]);
+                }
+                $productVarriant = ProductVariant::query()->get();
+                foreach ($productVarriant as $item) {
+                    foreach ($order->orderItems as $value) {
+                        if ($value->product_variant_id == $item->id) {
+                            $item->update([
+                                'quantity' => $item->quantity + $value->order_item_quantity
+                            ]);
+                        }
+                    }
+                }
+            });
+            return redirect()->route('listorders')->with('success', 'Hủy thành công !!!');
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Hủy không thành công !!!');
+        }
+    }
 }

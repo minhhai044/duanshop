@@ -14,7 +14,6 @@
                 <li><a class="nav-link" href="{{ route('shop') }}">Shop</a></li>
                 <li><a class="nav-link" href="{{ route('about') }}">About</a></li>
                 <li><a class="nav-link" href="{{ route('services') }}">Services</a></li>
-                <li><a class="nav-link" href="{{ route('blog') }}">Blog</a></li>
                 <li><a class="nav-link" href="{{ route('contact') }}">Contact</a></li>
             </ul>
             <ul class="navbar-nav mb-2 mb-md-0 ms-5 dropdown">
@@ -31,6 +30,7 @@
                                 <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard admin</a></li>
                             @endif
                             <li><a class="dropdown-item" href="#">My account</a></li>
+                            <li><a class="dropdown-item" href="{{route('listorders')}}">My Orders</a></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="post">
                                     @csrf

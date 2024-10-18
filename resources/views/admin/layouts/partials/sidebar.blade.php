@@ -41,7 +41,7 @@
     </li>
     <li class="nav-item active">
         <a class="nav-link " href="{{route('colors.index')}}">
-            <i class="fas fa-fw fa-tag"></i>
+            <i class="fas fa fa-certificate"></i>
             <span>Color</span></a>
     </li>
     <li class="nav-item active">
@@ -52,12 +52,12 @@
 
     <li class="nav-item active">
         <a class="nav-link" href="{{route('dashboard.account')}}">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-users"></i>
             <span>Account</span></a>
     </li>
     <li class="nav-item active">
         <a class="nav-link" href="{{route('dashboard.cart')}}">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa fa-shopping-cart"></i>
             <span>Cart</span></a>
     </li>
 

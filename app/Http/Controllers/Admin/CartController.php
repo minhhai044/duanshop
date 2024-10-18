@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -55,13 +57,28 @@ class CartController extends Controller
     }
     public function cancelCart(Request $request, string $id)
     {
-        $data = Order::findOrFail($id);
-        if ($request->status_order == STATUS_ORDER_PENDING) {
-            $data->update([
-                "status_order" => STATUS_ORDER_CANCELED
-            ]);
+        try {
+            DB::transaction(function () use ($request, $id) {
+                $order = Order::with('orderItems', 'user')->findOrFail($id);
+                if ($request->status_order == STATUS_ORDER_PENDING) {
+                    $order->update([
+                        "status_order" => STATUS_ORDER_CANCELED
+                    ]);
+                }
+                $productVariant = ProductVariant::query()->get();
+                foreach ($productVariant as $item) {
+                    foreach ($order->orderItems as $value) {
+                        if ($item->id == $value->product_variant_id) {
+                            $item->update([
+                                'quantity' => $item->quantity + $value->order_item_quantity
+                            ]);
+                        }
+                    }
+                }
+            });
             return redirect()->route('dashboard.cart')->with('success', 'Hủy đơn hàng thành công !!!');
+        } catch (\Throwable $th) {
+            return redirect()->route('dashboard.cart')->with('error', 'Đơn hàng không thể hủy !!!');
         }
-        return redirect()->route('dashboard.cart')->with('error', 'Đơn hàng không thể hủy !!!');
     }
 }
