@@ -17,8 +17,20 @@
                 <li><a class="nav-link" href="{{ route('contact') }}">Contact</a></li>
             </ul>
             <ul class="navbar-nav mb-2 mb-md-0 ms-5 dropdown">
-                <li style="width: 34px; height:44px "><a class="nav-link " href="#"><img
-                            src="/client/images/search.svg"></a></li>
+                <li style="width: 34px; height:44px " class="dropstart">
+                    <a class="nav-link " href="#" data-bs-toggle="dropdown" aria-expanded="false"><img
+                            src="/client/images/search.svg"></a>
+                    <ul class="dropdown-menu">
+
+                        <form action="{{route("search")}}" class="dropdown-item" method="post">
+                            @csrf
+                                <input type="text" name="keysearch">
+                                <button type="submit">Search</button>
+                    
+                        </form>
+
+                    </ul>
+                </li>
                 <li class="mx-3" style="width: 34px; height:44px "><a href="" class="nav-link"
                         id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><img
                             src="/client/images/user.svg"></a>
@@ -30,7 +42,7 @@
                                 <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard admin</a></li>
                             @endif
                             <li><a class="dropdown-item" href="#">My account</a></li>
-                            <li><a class="dropdown-item" href="{{route('listorders')}}">My Orders</a></li>
+                            <li><a class="dropdown-item" href="{{ route('listorders') }}">My Orders</a></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="post">
                                     @csrf
@@ -46,7 +58,8 @@
                     </ul>
                 </li>
 
-                <li style="width: 34px; height:44px "><a class="nav-link" href="{{ route('listcart') }}"><img src="/client/images/cart.svg"></a></li>
+                <li style="width: 34px; height:44px "><a class="nav-link" href="{{ route('listcart') }}"><img
+                            src="/client/images/cart.svg"></a></li>
             </ul>
         </div>
     </div>

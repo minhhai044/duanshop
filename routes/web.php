@@ -18,6 +18,7 @@ use App\Http\Middleware\CheckQuantityUpdateCart;
 use App\Http\Middleware\Isadmin;
 use App\Http\Middleware\Ismember;
 use GuzzleHttp\Middleware;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -40,7 +41,7 @@ Route::prefix('/')->group(function () {
     Route::get('shop', [GeneralController::class, 'shop'])->name('shop');
 
     Route::get('{detail}/detail', [GeneralController::class, 'detail'])->name('detail');
-
+    Route::post('search',[GeneralController::class,'search'])->name('search');
 
 
 
@@ -59,7 +60,7 @@ Route::prefix('/')->group(function () {
     Route::get('{order}/orders', [OrderController::class, 'showOrders'])->name('show.orders')->middleware('auth');
     Route::put('{order}/orders', [OrderController::class, 'ordersCancel'])->name('orders.cancel');
 
-
+  
 
     Route::get('about', [GeneralController::class, 'about'])->name('about');
 

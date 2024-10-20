@@ -31,8 +31,8 @@ class GeneralController extends Controller
             'tags',
             'product_variant'
         )->find($id);
-        $colors = Color::query()->pluck('color_name','id')->all();
-        $Capacities = Capacity::query()->pluck('cap_name','id')->all();
+        $colors = Color::query()->pluck('color_name', 'id')->all();
+        $Capacities = Capacity::query()->pluck('cap_name', 'id')->all();
         $variants = ProductVariant::with('capacity', 'color')->where('product_id', $id)->get();
         // dd($variants->toArray());
         return view('client.detail', compact(
@@ -42,7 +42,16 @@ class GeneralController extends Controller
             'Capacities'
         ));
     }
-    
+    public function search(Request $request)
+    {
+        $key = $request->keysearch;
+
+        $products = Product::with('tags')
+            ->whereAny(['pro_name'], 'LIKE', "%$key%")
+            ->get();
+        return view('client.search', compact('products'));
+    }
+
 
 
 
@@ -70,7 +79,7 @@ class GeneralController extends Controller
     {
         return view('client.blog');
     }
-    
+
     public function checkout()
     {
         return view('client.checkout');
