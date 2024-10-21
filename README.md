@@ -1,67 +1,31 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Trang quản lý sản phẩm 
+![image](https://github.com/user-attachments/assets/a5bbf40e-88ab-4f6f-bb10-dd7a45be86aa)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Trang thêm mới sản phẩm với nhiều biến thể như màu sắc , dung lượng , số lượng mỗi loại và tag , gallery
+![image](https://github.com/user-attachments/assets/57e34fba-5e59-450c-a0a5-bfc6164582f2)
+![image](https://github.com/user-attachments/assets/0b92922d-763a-4d49-a04b-79fbdd9ed9a3)
+![image](https://github.com/user-attachments/assets/6bdc4105-e79b-4157-9ca2-e66607f7e124)
 
-## About Laravel
+Trang quản lý đơn hàng với cập nhật trạng thái đơn hàng 
+![image](https://github.com/user-attachments/assets/6fd60fe5-39f3-478e-80a6-ff56f26682a4)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Trang chi tiết đơn hàng
+![image](https://github.com/user-attachments/assets/5917e705-0e07-46fe-9484-668bd72a9265)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Trang quản lý người dùng
+![image](https://github.com/user-attachments/assets/7ebb9141-f290-4917-81c3-dbdd5b0e0237)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Trang danh sách sản phảm
+![image](https://github.com/user-attachments/assets/05ff21be-5c9b-408c-84b9-d3ebf70efa8f)
 
-## Learning Laravel
+Trang giỏ hàng
+![image](https://github.com/user-attachments/assets/3acc8ead-04d0-422d-b974-57747562bb13)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Trang checkout
+![image](https://github.com/user-attachments/assets/6d9858ba-37d9-4f81-8dda-2aeb905ab514)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Trang đơn hàng
+![image](https://github.com/user-attachments/assets/8bfb6a3a-0b13-416d-8b58-82e1984c64ef)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
+Trang chi tiết đơn hàng
+![image](https://github.com/user-attachments/assets/92d6c866-2c3a-4dc2-80e9-086c08118bc2)
