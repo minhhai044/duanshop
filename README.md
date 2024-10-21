@@ -18,6 +18,9 @@ Trang quản lý người dùng
 Trang danh sách sản phảm
 ![image](https://github.com/user-attachments/assets/05ff21be-5c9b-408c-84b9-d3ebf70efa8f)
 
+Trang chi tiết sản phẩm
+![image](https://github.com/user-attachments/assets/40fa137c-1770-40d5-ab22-a7efdbc1b225)
+
 Trang giỏ hàng
 ![image](https://github.com/user-attachments/assets/3acc8ead-04d0-422d-b974-57747562bb13)
 
