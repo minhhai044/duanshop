@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Events\SendMailOrderEvent;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Mail\OrderMailController;
 use App\Http\Requests\CheckOutRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
@@ -58,7 +60,8 @@ class OrderController extends Controller
     public function storeCheckout(CheckOutRequest $request)
     {
         try {
-            DB::transaction(function () use ($request) {
+            $order = null;
+            DB::transaction(function () use ($request, &$order) {
                 $user = Auth::user();
                 $data = $request->all();
                 $data['user_id'] = $user->id;
@@ -107,7 +110,7 @@ class OrderController extends Controller
                 CartItem::query()->where('cart_id', $cart->id)->delete();
                 $cart->delete();
             });
-            return redirect()->route('thankyou');
+            return redirect()->route('thankyou', $order);
         } catch (\Throwable $th) {
             Log::debug(__CLASS__ . '@' . __FUNCTION__, [$th->getMessage()]);
             return back();

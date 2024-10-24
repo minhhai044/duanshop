@@ -10,6 +10,7 @@ use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\GeneralController;
 use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Login\UserController;
+use App\Http\Controllers\Mail\OrderMailController;
 use App\Http\Middleware\CheckAddProductCart;
 use App\Http\Middleware\CheckMyOrder;
 use App\Http\Middleware\CheckQuantityCheckOutCart;
@@ -44,11 +45,6 @@ Route::prefix('/')->group(function () {
     Route::post('search',[GeneralController::class,'search'])->name('search');
 
 
-
-
-
-
-
     Route::post('addcart', [CartController::class, 'addcart'])->name('addcart')->middleware(['auth', CheckQuantityProductCart::class, CheckAddProductCart::class]);
     Route::get('listcart', [CartController::class, 'listcart'])->name('listcart')->middleware('auth');
     Route::delete('{cartitem}/cartitemdelete', [CartController::class, 'cartItemDelete'])->name('cart.delete');
@@ -60,14 +56,14 @@ Route::prefix('/')->group(function () {
     Route::get('{order}/orders', [OrderController::class, 'showOrders'])->name('show.orders')->middleware('auth');
     Route::put('{order}/orders', [OrderController::class, 'ordersCancel'])->name('orders.cancel');
 
-  
+    Route::get('{thankyou}/thankyou', [OrderMailController::class, 'sendMailOrders'])->name('thankyou');
 
     Route::get('about', [GeneralController::class, 'about'])->name('about');
 
 
     Route::get('contact', [GeneralController::class, 'contact'])->name('contact');
     Route::get('services', [GeneralController::class, 'services'])->name('services');
-    Route::get('thankyou', [GeneralController::class, 'thankyou'])->name('thankyou');
+    
 });
 
 

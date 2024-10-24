@@ -46,6 +46,5 @@ class CheckAddProductCart
         } else {
             return $next($request);
         }
-        
     }
 }

@@ -59,28 +59,28 @@ class StoreProductRequest extends FormRequest
         return [
             'pro_name.required' => "Vui lòng nhập Name",
             'pro_name.unique' => "Name đã tồn tại",
-            
+
             'pro_sku.required' => "Vui lòng nhập Sku",
             'pro_sku.unique' => "Sku đã tồn tại",
-            
+
             'pro_img_thumbnail.image' => "Vui lòng chọn lại Image",
             'pro_img_thumbnail.max' => "Image không được vượt quá 2MB",
-            
-            'pro_price_regular.required' => "Vui lòng nhập Price Regular" ,
-            'pro_price_regular.numeric' => "Vui lòng nhập Price numeric" ,
-            'pro_price_regular.min' => "Price numeric phải lớn hơn 0" ,
-            'pro_price_regular.max' => "Price numeric quá lớn" ,
 
-            'pro_price_sale.numeric' => "Vui lòng nhập Price numeric" ,
-            'pro_price_sale.min' => "Price numeric phải lớn hơn 0" ,
-            'pro_price_sale.max' => "Price numeric quá lớn" ,
-            
+            'pro_price_regular.required' => "Vui lòng nhập Price Regular",
+            'pro_price_regular.numeric' => "Vui lòng nhập Price numeric",
+            'pro_price_regular.min' => "Price numeric phải lớn hơn 0",
+            'pro_price_regular.max' => "Price numeric quá lớn",
+
+            'pro_price_sale.numeric' => "Vui lòng nhập Price numeric",
+            'pro_price_sale.min' => "Price numeric phải lớn hơn 0",
+            'pro_price_sale.max' => "Price numeric quá lớn",
+
             'category_id'  => "Vui lòng chọn Category",
 
             'product_variants.*.quantity.required' => "Vui lòng nhập Quantity cho biến thể",
             'product_variants.*.quantity.integer' => "Vui lòng không để số 0 đầu tiên trong Quantity",
             'product_variants.*.quantity.min' => "Quantity phải lớn hơn hoặc bằng 0",
-            
+
             'tags.required' => "Vui lòng chọn Tag",
 
             'image_galleries.required' => "Vui lòng chọn Gallery Image",

@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    Category
+    Order
 @endsection
 @section('content')
     <div class="container-fluid">
@@ -8,7 +8,7 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <span style="font-size: 25px" class="m-0 font-weight-bold text-primary">List Category</span>
+                <span style="font-size: 25px" class="m-0 font-weight-bold text-primary">List Orders</span>
 
             </div>
             <div class="card-body">

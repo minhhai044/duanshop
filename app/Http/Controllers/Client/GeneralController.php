@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Events\SendMailOrderEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAddCartRequest;
 use App\Models\Capacity;
@@ -9,6 +10,7 @@ use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GeneralController extends Controller
 {
@@ -91,9 +93,5 @@ class GeneralController extends Controller
     public function services()
     {
         return view('client.services');
-    }
-    public function thankyou()
-    {
-        return view('client.thankyou');
     }
 }
