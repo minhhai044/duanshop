@@ -2,40 +2,50 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Events\SendMailOrderEvent;
+
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreAddCartRequest;
-use App\Models\Capacity;
-use App\Models\Color;
 use App\Models\Product;
-use App\Models\ProductVariant;
+use App\Services\CapacityService;
+use App\Services\ColorService;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 
 class GeneralController extends Controller
 {
+    protected $productService;
+    protected $colorService;
+    protected $capacityService;
+    public function __construct(
+        ProductService $productService,
+        ColorService $colorService,
+        CapacityService $capacityService
+    ) {
+        $this->productService = $productService;
+        $this->colorService = $colorService;
+        $this->capacityService = $capacityService;
+    }
     public function index()
     {
-        $products = Product::query()->where('pro_featured', 1)->latest('id')->limit(3)->get();
+        $products = $this->productService->getFeaturedProduct(3);
         return view('client.index', compact('products'));
     }
     public function shop()
     {
-        $products = Product::query()->latest('id')->paginate(8);
+        $products = $this->productService->paginateProduct(8);
         return view('client.shop', compact('products'));
     }
 
     public function detail(string $id)
     {
-        $dataDetails = Product::with(
-            'category',
-            'galleries',
-            'tags',
-            'product_variant'
-        )->find($id);
-        $colors = Color::query()->pluck('color_name', 'id')->all();
-        $Capacities = Capacity::query()->pluck('cap_name', 'id')->all();
-        $variants = ProductVariant::with('capacity', 'color')->where('product_id', $id)->get();
+
+        $dataDetails    = $this->productService->findIDRelationProduct($id, ['category', 'galleries', 'product_variant']);
+
+        $colors         = $this->colorService->pluckColor('color_name', 'id');
+        $Capacities     = $this->capacityService->pluckCapacity('cap_name', 'id');
+
+        $variants       = $this->productService->productvariantFindbyProduct_id($id, ['capacity', 'color']);
+
         // dd($variants->toArray());
         return view('client.detail', compact(
             'dataDetails',

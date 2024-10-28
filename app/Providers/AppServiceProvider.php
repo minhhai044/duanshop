@@ -7,6 +7,11 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+
+    // public $serviceBindings = [
+    //     'App\Services\CategoryService',
+    //     'App\Services\CategoryService',
+    // ];
     /**
      * Register any application services.
      */

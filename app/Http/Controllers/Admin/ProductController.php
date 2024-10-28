@@ -13,6 +13,12 @@ use App\Models\Gallery;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Tag;
+use App\Services\CapacityService;
+use App\Services\CategoryService;
+use App\Services\ColorService;
+use App\Services\GalleryService;
+use App\Services\ProductService;
+use App\Services\TagService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -20,24 +26,40 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $productService;
+    protected $categoryService;
+    protected $colorService;
+    protected $tagService;
+    protected $capacityService;
+    protected $galleryService;
+    public function __construct(
+        ProductService $productService,
+        CategoryService $categoryService,
+        ColorService $colorService,
+        TagService $tagService,
+        CapacityService $capacityService,
+        GalleryService $galleryService
+    ) {
+        $this->productService = $productService;
+        $this->categoryService = $categoryService;
+        $this->colorService = $colorService;
+        $this->tagService = $tagService;
+        $this->capacityService = $capacityService;
+        $this->galleryService = $galleryService;
+    }
     public function index()
     {
-        $products = Product::with('category')->latest('id')->get();
+        $products = $this->productService->getProduct(['category']);
         return view('admin.products.index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $categories = Category::query()->pluck('cate_name', 'id');
-        $colors = Color::query()->pluck('color_name', 'id');
-        $capacities = Capacity::query()->pluck('cap_name', 'id');
-        $tags = Tag::query()->pluck('tag_name', 'id');
+        $categories =   $this->categoryService->pluckCategory('cate_name', 'id');
+        $colors     =   $this->colorService->pluckColor('color_name', 'id');
+        $capacities =   $this->capacityService->pluckCapacity('cap_name', 'id');
+        $tags       =   $this->tagService->pluckTag('tag_name', 'id');
+
         return view('admin.products.create', compact(['categories', 'colors', 'capacities', 'tags']));
     }
     /**
@@ -45,13 +67,11 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        // dd($request);
         // Sử dụng except dể loại bỏ các trường có key truyền vào trong request
         $dataProduct = $request->except(['product_variants', 'tags', 'image_galleries']);
         if ($request->hasFile('pro_img_thumbnail')) {
             $dataProduct['pro_img_thumbnail'] = Storage::put('products', $request->file('pro_img_thumbnail'));
         }
-
         //Biến thể
         $dataProductVariantsTmp = $request->product_variants;
         $dataProductVariants = [];
@@ -64,11 +84,9 @@ class ProductController extends Controller
                 'quantity' => $item['quantity'],
             ];
         }
-
         // Gallery
         $dataProductGalleriesTmp = $request->image_galleries ?? [];
         $dataProductGalleries = [];
-        // dd($dataProductGalleriesTmp);
         foreach ($dataProductGalleriesTmp as $imageGallery) {
             if (!empty($imageGallery)) {
                 $dataProductGalleries[] = [
@@ -80,22 +98,21 @@ class ProductController extends Controller
         $dataProductTags = $request->tags;
 
 
-
         try {
 
             DB::transaction(function () use ($dataProduct, $dataProductVariants, $dataProductGalleries, $dataProductTags) {
-                $product = Product::query()->create($dataProduct);
+                $product = $this->productService->createProduct($dataProduct);
 
                 foreach ($dataProductVariants as $item) {
                     $item['product_id'] = $product->id;
-                    ProductVariant::query()->create($item);
+                    $this->productService->createProductVariant($item);
                 }
 
                 $product->tags()->attach($dataProductTags);
 
                 foreach ($dataProductGalleries as $item) {
                     $item['product_id'] = $product->id;
-                    Gallery::query()->create($item);
+                    $this->galleryService->createGallery($item);
                 }
             });
             return redirect()
@@ -115,28 +132,20 @@ class ProductController extends Controller
             return back()->with('error', 'Thêm mới không thành công !!!');
         }
     }
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id) {}
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        $data = Product::with('galleries')->find($id);
-        // $data->load('galleries','tags','product_variant');//load() sử dụng để tải trước các mối quan hệ của một model.
-        $product_variants = $data->product_variant;
-        $categories = Category::query()->pluck('cate_name', 'id')->all();
-        $colors = Color::query()->pluck('color_name', 'id')->all();
-        $capacities = Capacity::query()->pluck('cap_name', 'id')->all();
-        $tags = Tag::query()->pluck('tag_name', 'id')->all();
+        $data       =   $this->productService->findIDRelationProduct($id, ['product_variant']);
+
+        $categories =   $this->categoryService->pluckCategory('cate_name', 'id');
+        $colors     =   $this->colorService->pluckColor('color_name', 'id');
+        $capacities =   $this->capacityService->pluckCapacity('cap_name', 'id');
+        $tags       =   $this->tagService->pluckTag('tag_name', 'id');
+
+
         $product_tags = $data->tags->pluck('id')->all();
 
         return view('admin.products.edit', compact(
             'data',
-            'product_variants',
             'categories',
             'colors',
             'capacities',
@@ -150,12 +159,12 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, string $id)
     {
-
-
         $dataProduct = $request->except(['product_variants', 'tags', 'image_galleries']);
+
         if ($request->hasFile('pro_img_thumbnail')) {
             $dataProduct['pro_img_thumbnail'] = Storage::put('products', $request->file('pro_img_thumbnail'));
         }
+
         $product_variantsTmp = $request->product_variants;
 
         $dataProductVariants = [];
@@ -167,14 +176,15 @@ class ProductController extends Controller
                 'quantity' => $value['quantity']
             ];
         }
+
         $dataTags = $request->tags;
+
         $dataProductGalleries = $request->image_galleries;
-        // dd($dataProductGalleries);
 
         try {
             DB::transaction(function () use ($dataProduct, $dataProductVariants, $dataTags, $dataProductGalleries, $id) {
 
-                $product = Product::query()->find($id);
+                $product = $this->productService->findIDProduct($id);
 
                 if (!empty($dataProduct['pro_img_thumbnail']) && Storage::exists($product->pro_img_thumbnail)) {
                     Storage::delete($product->pro_img_thumbnail);
@@ -195,7 +205,7 @@ class ProductController extends Controller
                 $product->tags()->sync($dataTags);
 
                 foreach ($dataProductGalleries ?? [] as $id => $image) {
-                    $gallery = Gallery::query()->find($id);
+                    $gallery = $this->galleryService->findIdGallery($id);
 
                     if (!empty($image) && Storage::exists($gallery->image)) {
                         Storage::delete($gallery->image);
@@ -215,7 +225,6 @@ class ProductController extends Controller
 
             return back()->with('error', 'Update không thành công !!!');
         }
-        // dd($dataProductGalleries);
     }
 
     /**
@@ -223,11 +232,9 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        // $products = Product::query()->find($id);
-        // dd($products->galleries);
         try {
             DB::transaction(function () use ($id) {
-                $products = Product::query()->find($id);
+                $products = $this->productService->findIDProduct($id);
 
                 $products->tags()->sync([]);
 

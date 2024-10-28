@@ -5,18 +5,21 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreCategoryRequest;
 use App\Http\Requests\Admin\UpdateCategoryRequest;
-use App\Http\Requests\Admin\UpdateColorRequest;
-use App\Models\Category;
-use Illuminate\Http\Request;
+use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
-     /**
+    protected $CategoryService;
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->CategoryService = $categoryService;
+    }
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = Category::query()->latest('id')->get();
+        $data = $this->CategoryService->getCategory();
         return view('admin.categories.index', compact('data'));
     }
 
@@ -35,28 +38,19 @@ class CategoryController extends Controller
     {
         try {
             $data = $request->all();
-            Category::query()->create($data);
+            $this->CategoryService->createCategory($data);
             return redirect()->route('categories.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thêm mới không thành công !!!');
         }
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        $data = Category::query()->find($id);
-       return view('admin.categories.edit',compact('data'));
+        $data = $this->CategoryService->findIdCategory($id);
+        return view('admin.categories.edit', compact('data'));
     }
 
     /**
@@ -66,9 +60,7 @@ class CategoryController extends Controller
     {
         try {
             $data = $request->all();
-        $category = Category::query()->find($id);
-
-        $category->update($data);
+            $this->CategoryService->updateCategory($id, $data);
             return redirect()->route('categories.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thao tác không thành công !!!');
@@ -81,9 +73,7 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         try {
-        $category = Category::query()->find($id);
-
-        $category->delete();
+            $this->CategoryService->deleteCategory($id);
             return redirect()->route('categories.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thao tác không thành công !!!');

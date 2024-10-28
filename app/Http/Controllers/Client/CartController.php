@@ -53,19 +53,6 @@ class CartController extends Controller
             Log::error(__CLASS__ . __FUNCTION__, [$th->getMessage()]);
             return back()->with('error', 'Add to cart không thành công !!!');
         }
-
-
-
-        // if ( !isset(session('cart')[$productVariant->id]) ) {
-        //     $data = $product->toArray() + $productVariant->toArray() + ['quantity_cart' => $request->quantity];
-        //     session()->put('cart.' . $productVariant->id , $data);
-        // }else{
-        //     $data = session('cart')[$productVariant->id];
-        //     $data['quantity_cart'] = $request->quantity;
-        //     session()->put('cart.' . $productVariant->id , $data);
-        // }
-
-        // return redirect()->route('listcart');
     }
     public function listcart()
     {

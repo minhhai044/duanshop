@@ -42,7 +42,7 @@ Route::prefix('/')->group(function () {
     Route::get('shop', [GeneralController::class, 'shop'])->name('shop');
 
     Route::get('{detail}/detail', [GeneralController::class, 'detail'])->name('detail');
-    Route::post('search',[GeneralController::class,'search'])->name('search');
+    Route::post('search', [GeneralController::class, 'search'])->name('search');
 
 
     Route::post('addcart', [CartController::class, 'addcart'])->name('addcart')->middleware(['auth', CheckQuantityProductCart::class, CheckAddProductCart::class]);
@@ -63,7 +63,6 @@ Route::prefix('/')->group(function () {
 
     Route::get('contact', [GeneralController::class, 'contact'])->name('contact');
     Route::get('services', [GeneralController::class, 'services'])->name('services');
-    
 });
 
 

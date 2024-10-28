@@ -139,7 +139,7 @@
                                                                         </div>
                                                                     </td>
                                                                     <td>
-                                                                        @foreach ($product_variants as $item)
+                                                                        @foreach ($data->product_variant as $item)
                                                                             @if ($item->color_id === $colorID && $item->capacity_id === $gbID)
                                                                                 <input type="number" class="form-control"
                                                                                     value="{{ $item->quantity }}"

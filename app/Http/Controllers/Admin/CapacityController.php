@@ -6,16 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoteCapacityRequest;
 use App\Http\Requests\Admin\UpdateCapacityRequest;
 use App\Models\Capacity;
+use App\Services\CapacityService;
 use Illuminate\Http\Request;
 
 class CapacityController extends Controller
 {
+    protected $capacityService;
+    public function __construct(
+        CapacityService $capacityService
+    ) {
+        $this->capacityService = $capacityService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = Capacity::query()->latest('id')->get();
+        $data = $this->capacityService->getCapacity();
         return view('admin.capacities.index', compact('data'));
     }
 
@@ -34,28 +41,18 @@ class CapacityController extends Controller
     {
         try {
             $data = $request->all();
-            Capacity::query()->create($data);
+            $this->capacityService->createCapacity($data);
             return redirect()->route('capacities.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thêm mới không thành công !!!');
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        $data = Capacity::query()->find($id);
-       return view('admin.capacities.edit',compact('data'));
+        $data = $this->capacityService->findIdCapacity($id);
+        return view('admin.capacities.edit', compact('data'));
     }
 
     /**
@@ -65,9 +62,7 @@ class CapacityController extends Controller
     {
         try {
             $data = $request->all();
-        $Capacity = Capacity::query()->find($id);
-
-        $Capacity->update($data);
+            $this->capacityService->updateCapacity($id, $data);
             return redirect()->route('capacities.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thao tác không thành công !!!');
@@ -80,9 +75,7 @@ class CapacityController extends Controller
     public function destroy(string $id)
     {
         try {
-        $Capacity = Capacity::query()->find($id);
-
-        $Capacity->delete();
+            $this->capacityService->deleteCapacity($id);
             return redirect()->route('capacities.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thao tác không thành công !!!');
