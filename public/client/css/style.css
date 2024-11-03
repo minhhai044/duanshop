@@ -883,3 +883,23 @@ textarea {
     border-radius: 50%;
     background: rgba(59, 93, 80, 0.2);
 }
+
+/* Style cho phần lọc sản phẩm */
+.form-select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: auto;
+}
+.btn-primary {
+    background-color: #5A67D8;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.btn-primary:hover {
+    background-color: #434190;
+}
+
+

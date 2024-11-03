@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Services\CapacityService;
+use App\Services\CategoryService;
 use App\Services\ColorService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
@@ -16,14 +17,18 @@ class GeneralController extends Controller
     protected $productService;
     protected $colorService;
     protected $capacityService;
+
+    protected $categoryService;
     public function __construct(
         ProductService $productService,
         ColorService $colorService,
-        CapacityService $capacityService
+        CapacityService $capacityService,
+        CategoryService $categoryService
     ) {
         $this->productService = $productService;
         $this->colorService = $colorService;
         $this->capacityService = $capacityService;
+        $this->categoryService = $categoryService;
     }
     public function index()
     {
@@ -33,7 +38,9 @@ class GeneralController extends Controller
     public function shop()
     {
         $products = $this->productService->paginateProduct(8);
-        return view('client.shop', compact('products'));
+        $categories = $this->categoryService->pluckCategory('cate_name', 'id');
+        // dd($categories);
+        return view('client.shop', compact('products', 'categories'));
     }
 
     public function detail(string $id)
@@ -63,8 +70,17 @@ class GeneralController extends Controller
             ->get();
         return view('client.search', compact('products'));
     }
+    public function searchfilter(Request $request)
+    {
+        $categories = $this->categoryService->pluckCategory('cate_name', 'id');
 
+        $filter_price = explode('-', $request->filter_price);
+        $products = Product::query()
+            ->whereAny(['category_id'], 'LIKE', "%$request->category_id%")
+            ->whereBetween('pro_price_regular', $filter_price)->paginate(8);
 
+        return view('client.shop', compact('products', 'categories'));
+    }
 
 
 

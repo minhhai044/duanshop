@@ -43,6 +43,7 @@ Route::prefix('/')->group(function () {
 
     Route::get('{detail}/detail', [GeneralController::class, 'detail'])->name('detail');
     Route::post('search', [GeneralController::class, 'search'])->name('search');
+    Route::post('searchfilter', [GeneralController::class, 'searchfilter'])->name('searchfilter');
 
 
     Route::post('addcart', [CartController::class, 'addcart'])->name('addcart')->middleware(['auth', CheckQuantityProductCart::class, CheckAddProductCart::class]);

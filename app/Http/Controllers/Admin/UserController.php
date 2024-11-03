@@ -46,11 +46,11 @@ class UserController extends Controller
         User::query()->where('id', $id)->update(['type' => User::TYPE_MEMBER]);
         return redirect()->route('dashboard.account');
     }
-    public function delete($id) {
+    public function delete($id)
+    {
         //xóa vĩnh viễn
-        User::withTrashed()->where('id',$id)->forceDelete();
-        
-        return redirect()->route('dashboard.account');
+        User::withTrashed()->where('id', $id)->forceDelete();
 
+        return redirect()->route('dashboard.account');
     }
 }
