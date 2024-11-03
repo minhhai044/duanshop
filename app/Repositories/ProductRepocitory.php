@@ -43,10 +43,6 @@ class ProductRepocitory
     }
 
     // ProductVariant
-    public function createVariant($data)
-    {
-        return $this->productVariant->create($data);
-    }
     public function variantFindbyProduct_id($id, $relation)
     {
         return $this->productVariant->with($relation)->where('product_id', $id)->get();

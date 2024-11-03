@@ -12,10 +12,6 @@ class GalleryService
     ) {
         $this->galleryRepository = $galleryRepository;
     }
-
-    public function createGallery($data){
-        return $this->galleryRepository->create($data);
-    }
     public function findIdGallery($id){
         return $this->galleryRepository->findId($id);
     }

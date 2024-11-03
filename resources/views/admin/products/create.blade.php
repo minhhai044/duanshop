@@ -24,7 +24,7 @@
                 @endif
                 @if (session()->has('error'))
                     <div class="alert alert-danger">
-                        {{session()->get('error')}}
+                        {{ session()->get('error') }}
                     </div>
                 @endif
                 <div class="table-responsive">
@@ -55,7 +55,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="pro_name">Name</label>
-                                            <input type="text" value="{{old('pro_name')}}" name="pro_name" id="pro_name" class="form-control">
+                                            <input type="text" value="{{ old('pro_name') }}" name="pro_name"
+                                                id="pro_name" class="form-control">
                                         </div>
                                         <div class="mt-3">
                                             <label for="sku" class="form-label">SKU</label>
@@ -69,22 +70,22 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="pro_price_regular">Price Regular</label>
-                                            <input type="number" value="{{old('pro_price_regular')}}" name="pro_price_regular" id="pro_price_regular"
-                                                class="form-control">
+                                            <input type="number" value="{{ old('pro_price_regular') }}"
+                                                name="pro_price_regular" id="pro_price_regular" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label for="pro_price_sale">Price Sale</label>
-                                            <input type="number" value="{{old('pro_price_sale')}}" name="pro_price_sale" id="pro_price_sale"
-                                                class="form-control">
+                                            <input type="number" value="{{ old('pro_price_sale') }}" name="pro_price_sale"
+                                                id="pro_price_sale" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label for="pro_featured">Featured</label>
-                                            <input  type="checkbox" name="pro_featured" id="pro_featured"
+                                            <input type="checkbox" name="pro_featured" id="pro_featured"
                                                 class="form-checkbox" value="1">
                                         </div>
                                         <div class="form-group">
                                             <label for="pro_description">Description</label>
-                                            <textarea name="pro_description" id="pro_description" class="form-control">{{old('pro_description')}}</textarea>
+                                            <textarea name="pro_description" id="pro_description" class="form-control">{{ old('pro_description') }}</textarea>
                                         </div>
                                     </div>
 
@@ -221,7 +222,7 @@
                                                     id="image_5" />
                                             </div>
                                         </div>
-                                       
+
                                     </div>
                                 </div>
                             </div>

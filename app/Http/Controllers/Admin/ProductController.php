@@ -49,7 +49,9 @@ class ProductController extends Controller
     }
     public function index()
     {
+
         $products = $this->productService->getProduct(['category']);
+
         return view('admin.products.index', compact('products'));
     }
 
@@ -65,54 +67,75 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request)
+    private function ProductLogicRequest($request)
     {
-        // Sử dụng except dể loại bỏ các trường có key truyền vào trong request
+        //dataProduct
         $dataProduct = $request->except(['product_variants', 'tags', 'image_galleries']);
+
         if ($request->hasFile('pro_img_thumbnail')) {
+
             $dataProduct['pro_img_thumbnail'] = Storage::put('products', $request->file('pro_img_thumbnail'));
         }
-        //Biến thể
+        //Variant
         $dataProductVariantsTmp = $request->product_variants;
+
         $dataProductVariants = [];
-        foreach ($dataProductVariantsTmp as $key => $item) {
-            // Tạo 1 mảng mới chưa các giá trị cách nhau bằng dấu "-" , 1-2  sẽ thành [1,2]
+
+        foreach ($dataProductVariantsTmp as $key => $value) {
+
             $tmp = explode('-', $key);
             $dataProductVariants[] = [
                 'capacity_id' => $tmp[0],
                 'color_id' => $tmp[1],
-                'quantity' => $item['quantity'],
+                'quantity' => $value['quantity'],
             ];
         }
-        // Gallery
+
+        //Galleries
+
         $dataProductGalleriesTmp = $request->image_galleries ?? [];
+
         $dataProductGalleries = [];
-        foreach ($dataProductGalleriesTmp as $imageGallery) {
-            if (!empty($imageGallery)) {
-                $dataProductGalleries[] = [
-                    'image' => Storage::put('galleries', $imageGallery)
-                ];
+
+        foreach ($dataProductGalleriesTmp as $key => $image) {
+
+            if (!empty($image)) {
+
+                $dataProductGalleries[$key] = Storage::put('galleries', $image);
             }
         }
+
         //Tag
         $dataProductTags = $request->tags;
 
+        return [$dataProduct, $dataProductVariants, $dataProductTags, $dataProductGalleries];
+    }
+    public function store(StoreProductRequest $request)
+    {
+        // Lay data
 
         try {
+            list(
+                $dataProduct,
+                $dataProductVariants,
+                $dataProductTags,
+                $dataProductGalleries
+            ) = $this->ProductLogicRequest($request);
+
 
             DB::transaction(function () use ($dataProduct, $dataProductVariants, $dataProductGalleries, $dataProductTags) {
+
                 $product = $this->productService->createProduct($dataProduct);
 
                 foreach ($dataProductVariants as $item) {
-                    $item['product_id'] = $product->id;
-                    $this->productService->createProductVariant($item);
+                    $product->product_variant()->create($item);
                 }
 
                 $product->tags()->attach($dataProductTags);
 
                 foreach ($dataProductGalleries as $item) {
-                    $item['product_id'] = $product->id;
-                    $this->galleryService->createGallery($item);
+
+                    $product->galleries()->create(['image' => $item]);
                 }
             });
             return redirect()
@@ -124,11 +147,11 @@ class ProductController extends Controller
             }
 
             foreach ($dataProductGalleries as $item) {
-                if (!empty($item['image']) && Storage::exists($item['image'])) {
-                    Storage::delete($item['image']);
+                if (!empty($item) && Storage::exists($item)) {
+                    Storage::delete($item);
                 }
             }
-            Log::error(__CLASS__ . '@' . __FUNCTION__, [$th->getMessage()]);
+            Log::error(__CLASS__ . '@' . __FUNCTION__, context: [$th->getMessage()]);
             return back()->with('error', 'Thêm mới không thành công !!!');
         }
     }
@@ -159,30 +182,16 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, string $id)
     {
-        $dataProduct = $request->except(['product_variants', 'tags', 'image_galleries']);
-
-        if ($request->hasFile('pro_img_thumbnail')) {
-            $dataProduct['pro_img_thumbnail'] = Storage::put('products', $request->file('pro_img_thumbnail'));
-        }
-
-        $product_variantsTmp = $request->product_variants;
-
-        $dataProductVariants = [];
-        foreach ($product_variantsTmp as $key => $value) {
-            $ky = explode('-', $key);
-            $dataProductVariants[] = [
-                'capacity_id' => $ky[0],
-                'color_id' => $ky[1],
-                'quantity' => $value['quantity']
-            ];
-        }
-
-        $dataTags = $request->tags;
-
-        $dataProductGalleries = $request->image_galleries;
-
         try {
-            DB::transaction(function () use ($dataProduct, $dataProductVariants, $dataTags, $dataProductGalleries, $id) {
+            // Lay data
+            list(
+                $dataProduct,
+                $dataProductVariants,
+                $dataProductTags,
+                $dataProductGalleries
+            ) = $this->ProductLogicRequest($request);
+
+            DB::transaction(function () use ($dataProduct, $dataProductVariants, $dataProductTags, $dataProductGalleries, $id) {
 
                 $product = $this->productService->findIDProduct($id);
 
@@ -195,23 +204,26 @@ class ProductController extends Controller
 
 
                 foreach ($dataProductVariants as $item) {
-                    ProductVariant::query()
-                        ->where('product_id', '=', $id)
-                        ->where('capacity_id', '=', $item['capacity_id'])
-                        ->where('color_id', '=', $item['color_id'])
+                    ProductVariant::query()->where([
+                        ['product_id', $id],
+                        ['capacity_id', $item['capacity_id']],
+                        ['color_id', $item['color_id']]
+                    ])
                         ->update(['quantity' => $item['quantity']]);
                 }
 
-                $product->tags()->sync($dataTags);
+                $product->tags()->sync($dataProductTags);
 
-                foreach ($dataProductGalleries ?? [] as $id => $image) {
-                    $gallery = $this->galleryService->findIdGallery($id);
+
+                foreach ($dataProductGalleries ?? [] as $key => $image) {
+
+                    $gallery = $this->galleryService->findIdGallery($key);
 
                     if (!empty($image) && Storage::exists($gallery->image)) {
                         Storage::delete($gallery->image);
                     }
 
-                    $gallery->update(['image' => Storage::put('galleries', $image)]);
+                    $product->galleries()->where('id', $key)->update(['image' => $image]);
                 }
             });
             return redirect()
@@ -234,6 +246,7 @@ class ProductController extends Controller
     {
         try {
             DB::transaction(function () use ($id) {
+
                 $products = $this->productService->findIDProduct($id);
 
                 $products->tags()->sync([]);

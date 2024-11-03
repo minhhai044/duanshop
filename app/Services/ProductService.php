@@ -25,10 +25,6 @@ class ProductService
     {
         return $this->productRepocitory->create($data);
     }
-    public function createProductVariant($data)
-    {
-        return $this->productRepocitory->createVariant($data);
-    }
     public function findIDRelationProduct($id, $relation)
     {
         return $this->productRepocitory->findIDRelation($id, $relation);
