@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CapacityController;
 use App\Http\Controllers\Admin\CartController as AdminCartController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Client\CartController;
@@ -17,6 +18,7 @@ use App\Http\Middleware\CheckMyOrder;
 use App\Http\Middleware\CheckQuantityCheckOutCart;
 use App\Http\Middleware\CheckQuantityProductCart;
 use App\Http\Middleware\CheckQuantityUpdateCart;
+use App\Http\Middleware\CouponCheckMiddleware;
 use App\Http\Middleware\Isadmin;
 use App\Http\Middleware\Ismember;
 use GuzzleHttp\Middleware;
@@ -126,4 +128,7 @@ Route::prefix('dashboard')->middleware(['auth', 'isadmin'])->group(function () {
     Route::get('{cart}/cart',  [AdminCartController::class, 'showCart'])->name('cart.show');
     Route::put('{cart}/update',  [AdminCartController::class, 'updateCart'])->name('cart.update');
     Route::put('{cart}/cancelCart',  [AdminCartController::class, 'cancelCart'])->name('cart.cancel');
+
+    Route::post('coupons', [CouponController::class, 'store'])->name('coupons.store')->middleware(CouponCheckMiddleware::class);
+    Route::resource('coupons', CouponController::class)->except(['store']);
 });
