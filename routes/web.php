@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\GeneralController;
 use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\Login\SocialiteController;
 use App\Http\Controllers\Login\UserController;
 use App\Http\Controllers\Mail\OrderMailController;
 use App\Http\Middleware\CheckAddProductCart;
@@ -86,7 +87,11 @@ Route::get('reset-password/{token}', function ($token) {
 // Xử lý việc đặt lại mật khẩu
 Route::post('reset-password', [UserController::class, 'reset'])->middleware('guest')->name('password.update');
 
+Route::controller(SocialiteController::class)->group(function () {
+    Route::get('auth/redirection/{provider}', 'authProviderRedirect')->name('auth.redirection');
 
+    Route::get('auth/{provider}/callback', 'socialAuthentication')->name('auth.callback');
+});
 
 
 // admin

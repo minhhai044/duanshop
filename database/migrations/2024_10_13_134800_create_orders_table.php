@@ -26,11 +26,11 @@ return new class extends Migration
             $table->string('order_user_note')->nullable();
 
             //Trạng thái đơn hàng
-            $table->string('status_order')->default(Order::STATUS_ORDER_PENDING);
+            $table->string('status_order')->default(STATUS_ORDER_PENDING);
             //Phương thức thanh toán
-            $table->string('method_payment')->default(Order::METHOD_PAYMENT_DELIVERY);
+            $table->string('method_payment')->default(METHOD_PAYMENT_DELIVERY);
             //Trạng thái thanh toán
-            $table->string('status_payment')->default(Order::STATUS_PAYMENT_UNPAID);
+            $table->string('status_payment')->default(STATUS_PAYMENT_UNPAID);
             //Tổng giá đơn hàng
             $table->decimal('order_total_price',15,2);
 

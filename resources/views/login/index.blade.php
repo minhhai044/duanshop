@@ -11,6 +11,9 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/assetlogin/index.css ">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+        integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous" />
 </head>
 
 <body>
@@ -52,18 +55,19 @@
             <form action="{{ route('loginpost') }}" method="post">
                 @csrf
                 <h1>Sign in</h1>
-                {{-- <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                </div> --}}
+                <div class="social-container">
+                    <a href="{{ route('auth.redirection','facebook') }}" class="social social-facebook"><i
+                            class="bi bi-facebook"></i></a>
+                    <a href="{{ route('auth.redirection','google') }}" class="social social-google"><i class="bi bi-google"></i></a>
+                </div>
                 <span>or use your account</span>
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Password" />
                 <div class="d-flex fs-6">
-                        <input style="width: 50px;height: 18px;" type="checkbox" name="remember" id="remember"> <label style="margin-top: 5px" for="remember">Nhớ tài khoản</label>
+                    <input style="width: 50px;height: 18px;" type="checkbox" name="remember" id="remember"> <label
+                        style="margin-top: 5px" for="remember">Nhớ tài khoản</label>
                 </div>
-                <a class="fs-6" href="{{route('password.request')}}">Forgot your password?</a>
+                <a class="fs-6" href="{{ route('password.request') }}">Forgot your password?</a>
                 <button type="submit">Sign In</button>
             </form>
         </div>

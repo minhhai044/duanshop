@@ -212,7 +212,7 @@ input {
     transform: translateX(20%);
 }
 
-.social-container {
+/* .social-container {
     margin: 20px 0;
 }
 
@@ -225,7 +225,40 @@ input {
     margin: 0 5px;
     height: 40px;
     width: 40px;
+} */
+.social-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
 }
+
+.social {
+    margin: 0 10px;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.social:hover {
+    opacity: 0.8;
+}
+
+/* Specific color styles */
+.social-facebook {
+    background-color: #3b5998;
+}
+
+.social-google {
+    background-color: #db4437;
+}
+
 
 footer {
     background-color: #222;
