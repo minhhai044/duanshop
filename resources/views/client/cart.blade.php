@@ -3,28 +3,6 @@
     Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co
 @endsection
 @section('content')
-    <!-- Start Hero Section -->
-    {{-- <div class="hero">
-        <div class="container">
-            <div class="row justify-content-between">
-                <div class="col-lg-5">
-                    <div class="intro-excerpt">
-                        <h1>My <span clsas="d-block">Cart</span></h1>
-                        <p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam
-                            vulputate velit imperdiet dolor tempor tristique.</p>
-
-                    </div>
-                </div>
-                <div class="col-lg-7">
-                    <div class="hero-img-wrap">
-                        <img src="/client/images/sofaaa.png" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    <!-- End Hero Section -->
-
 
 
     <div class="untree_co-section before-footer-section">
@@ -99,9 +77,9 @@
                                                     name="quantity_{{ $item->id }}" type="text"
                                                     class="form-control p-2 text-center"
                                                     @foreach ($item->cartitem as $value)
-                                    @if ($value->cart_id == $item->cart_id)
-                                        value="{{ $value->cart_item_quantity }}" 
-                                    @endif @endforeach>
+                                                        @if ($value->cart_id == $item->cart_id)
+                                                            value="{{ $value->cart_item_quantity }}" 
+                                                        @endif @endforeach>
 
 
                                             </div>
@@ -171,24 +149,24 @@
                                 <label class="text-black h4" for="coupon">Coupon</label>
                                 <p>Enter your coupon code if you have one.</p>
                             </div>
-                            <div class="col-md-8 mb-3 mb-md-0">
-                                <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
-                            </div>
-                            <div class="col-md-4">
-                                <button class="btn btn-black">Apply Coupon</button>
-                            </div>
+                            <form action="{{ route('coupons.cart') }}" method="post" class="d-flex gap-2">
+                                @csrf
+                                <div class="col-md-8 mb-3 mb-md-0">
+                                    <input type="text" class="form-control h-100" name="coupon_code" id="coupon"
+                                        placeholder="Coupon Code">
+                                </div>
+                                <div class="col-md-4 ">
+                                    <button class="btn btn-success p-2">Apply Coupon</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="col-md-6 pl-5">
-                        {{-- @dd($productVariants) --}}
 
-                        {{-- @foreach ($productVariants as $item)
-                        {{$item}}
-                    @endforeach --}}
                         <div class="row justify-content-end">
                             <div class="col-md-7">
-                                <div class="row">
-                                    <div class="col-md-12 text-right border-bottom mb-5">
+                                <div class="row mb-4">
+                                    <div class="col-md-12 text-right border-bottom">
                                         <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
                                     </div>
                                 </div>
@@ -196,27 +174,64 @@
                                     <div class="col-md-6">
                                         <span class="text-black">Subtotal</span>
                                     </div>
-                                    <div class="col-md-6 text-right">
-                                        <strong class="text-black">{{ number_format($total) }} đ</strong>
+                                    <div class="col-md-6 text-end">
+                                        <strong class="text-black">{{ number_format($subtotal) }} đ</strong>
                                     </div>
                                 </div>
-                                <div class="row mb-5">
+                                <!-- Discount -->
+                                @if ($dataCouponsProduct)
+                                    @foreach ($dataCouponsProduct as $item)
+                                        @foreach ($item->cartitem as $value)
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <span class="text-muted">{{ $item->product->pro_name }}</span>
+                                                </div>
+                                                <div class="col-md-6 text-end">
+                                                    @if ($item->product->pro_price_sale)
+                                                        @if ($coupons['discount_type'])
+                                                            <span
+                                                                class="text-danger">-{{ number_format($coupons['discount_value']) }}
+                                                                đ</span>
+                                                        @else
+                                                            <span
+                                                                class="text-danger">-{{ number_format($item->product->pro_price_sale * ($coupons['discount_value'] / 100) * $value->cart_item_quantity) }}
+                                                                đ</span>
+                                                        @endif
+                                                    @else
+                                                        @if ($coupons['discount_type'])
+                                                            <span
+                                                                class="text-danger">-{{ number_format($coupons['discount_value']) }}
+                                                                đ</span>
+                                                        @else
+                                                            <span
+                                                                class="text-danger">-{{ number_format($item->product->pro_price_regular * ($coupons['discount_value'] / 100) * $value->cart_item_quantity) }}
+                                                                đ</span>
+                                                        @endif
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endforeach
+                                @endif
+
+                                <div class="row mb-4 border-top pt-3">
                                     <div class="col-md-6">
                                         <span class="text-black">Total</span>
                                     </div>
-                                    <div class="col-md-6 text-right">
+                                    <div class="col-md-6 text-end">
                                         <strong class="text-black">{{ number_format($total) }} đ</strong>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <a href="{{ route('checkout') }}"><button
-                                                class="btn btn-success py-3 w-90 ">Proceed To Checkout</button></a>
+                                        <a href="{{ route('checkout') }}" class="btn btn-success py-3 w-100">Proceed To
+                                            Checkout</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
 
                     </div>
                 </div>

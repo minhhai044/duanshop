@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('start_date')->comment('ngày bắt đầu');
             $table->timestamp('end_date')->comment('ngày kết thúc');
             $table->integer('coupon_limit')->default(0)->comment('giới hạn số lượng');
-            $table->integer('coupon_exist')->default(0)->comment('số lần còn lại');
+            $table->integer('coupon_used')->default(0)->comment('số lần đã sử dụng');
             $table->boolean('coupon_status')->default(1)->comment('trạng thái');
             $table->text('coupon_description')->nullable();
             $table->timestamps();

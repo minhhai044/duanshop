@@ -14,16 +14,10 @@ use App\Http\Controllers\Login\SocialiteController;
 use App\Http\Controllers\Login\UserController;
 use App\Http\Controllers\Mail\OrderMailController;
 use App\Http\Middleware\CheckAddProductCart;
-use App\Http\Middleware\CheckMyOrder;
+use App\Http\Middleware\CheckDiscountTypePercent;
 use App\Http\Middleware\CheckQuantityCheckOutCart;
 use App\Http\Middleware\CheckQuantityProductCart;
-use App\Http\Middleware\CheckQuantityUpdateCart;
 use App\Http\Middleware\CouponCheckMiddleware;
-use App\Http\Middleware\Isadmin;
-use App\Http\Middleware\Ismember;
-use GuzzleHttp\Middleware;
-use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,6 +42,7 @@ Route::prefix('/')->group(function () {
     Route::post('search', [GeneralController::class, 'search'])->name('search');
     Route::post('searchfilter', [GeneralController::class, 'searchfilter'])->name('searchfilter');
 
+    Route::post('couponscart', [CartController::class, 'couponsCart'])->name('coupons.cart');
 
     Route::post('addcart', [CartController::class, 'addcart'])->name('addcart')->middleware(['auth', CheckQuantityProductCart::class, CheckAddProductCart::class]);
     Route::get('listcart', [CartController::class, 'listcart'])->name('listcart')->middleware('auth');
@@ -129,6 +124,7 @@ Route::prefix('dashboard')->middleware(['auth', 'isadmin'])->group(function () {
     Route::put('{cart}/update',  [AdminCartController::class, 'updateCart'])->name('cart.update');
     Route::put('{cart}/cancelCart',  [AdminCartController::class, 'cancelCart'])->name('cart.cancel');
 
-    Route::post('coupons', [CouponController::class, 'store'])->name('coupons.store')->middleware(CouponCheckMiddleware::class);
-    Route::resource('coupons', CouponController::class)->except(['store']);
+    Route::post('coupons', [CouponController::class, 'store'])->name('coupons.store')->middleware([CouponCheckMiddleware::class, CheckDiscountTypePercent::class]);
+    Route::put('{coupon}/coupons', [CouponController::class, 'update'])->name('coupons.update')->middleware([CouponCheckMiddleware::class, CheckDiscountTypePercent::class]);
+    Route::resource('coupons', CouponController::class)->except(['store', 'update']);
 });

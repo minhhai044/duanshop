@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAddCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
-use App\Models\Product;
+use App\Models\Coupon;
 use App\Models\ProductVariant;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,11 @@ use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
+    protected $cartService;
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
     public function addcart(StoreAddCartRequest $request)
     {
 
@@ -54,62 +60,53 @@ class CartController extends Controller
             return back()->with('error', 'Add to cart không thành công !!!');
         }
     }
+
+    public function couponsCart(Request $request)
+    {
+        // Xóa session cũ khi thêm coupon mới
+        session()->forget(['dataCouponsProduct', 'coupons']);
+
+        $productVariants = $this->cartService->showProductVariantsCart();
+
+
+        $code = $request->validate([
+            'coupon_code' => 'required'
+        ]);
+
+        $coupons = Coupon::with('products')->where('coupon_code', $code)->first();
+        $dataCouponsProduct = [];
+        if ($coupons) {
+            if ($coupons->coupon_status && ($coupons->coupon_used < $coupons->coupon_limit)) {
+                foreach ($coupons->products as $value) {
+                    foreach ($productVariants as $item) {
+                        if ($value->id == $item->product_id) {
+                            $dataCouponsProduct[] = $item;
+                        }
+                    }
+                }
+                session(['dataCouponsProduct' => $dataCouponsProduct, 'coupons' => $coupons]);
+            } else {
+                return back()->with('error', 'coupon đã hết hạn !!!');
+            }
+        } else {
+            return back()->with('error', 'coupon không tồn tại !!!');
+        }
+        return back();
+    }
+
     public function listcart()
     {
         try {
-            $user_id = Auth::user()->id;
 
-            $cart = Cart::query()->where('user_id', $user_id)->first();
+            $productVariants = $this->cartService->showProductVariantsCart();
+            $data = $this->cartService->totalCoupon();
+            $total = $data['total'];
+            $subtotal = $data['subtotal'];
+            $dataCouponsProduct = $data['dataCouponsProduct'];
+            $coupons = $data['coupons'];
+            // session()->forget(['dataCouponsProduct', 'coupons']);
 
-            if (!empty($cart)) {
-
-                $cartItem = CartItem::query()->where('cart_id', $cart->id)->get();
-                // dd($cartItem);
-                $productVariants = [];
-
-                foreach ($cartItem as $item) {
-                    $productVariant = ProductVariant::with(
-                        'capacity',
-                        'color',
-                        'product',
-                        'cartitem'
-                    )->where('id', $item->product_variant_id)->first();
-                    $productVariant->cart_id = $item->cart_id;
-                    $productVariants[] = $productVariant;
-                }
-
-
-
-                //Total cart
-                $total = 0;
-                foreach ($productVariants as $item) {
-                    if (!empty($item->product->pro_price_sale)) {
-
-
-                        foreach ($item->cartitem as $value) {
-                            if ($item->cart_id == $value->cart_id) {
-                                $price = $item->product->pro_price_sale * $value->cart_item_quantity;
-                            }
-                        }
-                        $total += $price;
-                    } else {
-                        foreach ($item->cartitem as $value) {
-                            if ($item->cart_id == $value->cart_id) {
-                                $price = $item->product->pro_price_regular * $value->cart_item_quantity;
-                            }
-                        }
-
-                        $total += $price;
-                    }
-                }
-            } else {
-                $productVariants = null;
-            }
-
-
-
-
-            return view('client.cart', compact('productVariants', 'total'));
+            return view('client.cart', compact('productVariants', 'total', 'dataCouponsProduct', 'coupons','subtotal'));
         } catch (\Throwable $th) {
             return view('client.cart');
         }

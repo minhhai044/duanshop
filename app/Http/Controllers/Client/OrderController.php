@@ -8,9 +8,11 @@ use App\Http\Controllers\Mail\OrderMailController;
 use App\Http\Requests\CheckOutRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ProductVariant;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,43 +20,28 @@ use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
+    protected $cartService;
+    public function __construct(
+        CartService $cartService
+    ) {
+        $this->cartService = $cartService;
+    }
     public function checkout()
     {
-        $user = Auth::user();
-        $cart = Cart::query()->where('user_id', $user->id)->first();
-        $cartItem = CartItem::query()->where('cart_id', $cart->id)->get();
-        $productVariants = [];
-        foreach ($cartItem as $item) {
-            $productVariant = ProductVariant::with(
-                'capacity',
-                'color',
-                'product',
-                'cartitem'
-            )->find($item->product_variant_id);
-            $productVariant->cart_id = $item->cart_id;
-            $productVariants[] = $productVariant;
-        }
-        $total = 0;
-        foreach ($productVariants as $item) {
-            if (!empty($item->product->pro_price_sale)) {
-                foreach ($item->cartitem as $value) {
-                    if ($item->cart_id == $value->cart_id) {
-                        $price = $value->cart_item_quantity * $item->product->pro_price_sale;
-                    }
-                }
-                $total += $price;
-            } else {
-                foreach ($item->cartitem as $value) {
-                    if ($item->cart_id == $value->cart_id) {
-                        $price = $value->cart_item_quantity * $item->product->pro_price_regular;
-                    }
-                }
-                $total += $price;
-            }
-        }
+        try {
+
+            $productVariants = $this->cartService->showProductVariantsCart();
+            $data = $this->cartService->totalCoupon();
+            $total = $data['total'];
+            $subtotal = $data['subtotal'];
+            $dataCouponsProduct = $data['dataCouponsProduct'];
+            $coupons = $data['coupons'];
 
 
-        return view('client.checkout', compact('productVariants', 'total'));
+            return view('client.checkout', compact('productVariants', 'total', 'dataCouponsProduct', 'coupons', 'subtotal'));
+        } catch (\Throwable $th) {
+            return view('client.checkout');
+        }
     }
 
     public function storeCheckout(CheckOutRequest $request)
@@ -109,6 +96,13 @@ class OrderController extends Controller
                 }
                 CartItem::query()->where('cart_id', $cart->id)->delete();
                 $cart->delete();
+                $Coupon = Coupon::query()->find(session('coupons')['id']);
+                $checkSS = $Coupon->update([
+                    'coupon_used' => $Coupon->coupon_used + 1
+                ]);
+                if ($checkSS) {
+                    session()->forget(['dataCouponsProduct', 'coupons']);
+                }
             });
             return redirect()->route('thankyou', $order);
         } catch (\Throwable $th) {

@@ -37,6 +37,8 @@
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
                                         <h4 class="card-title mb-0 flex-grow-1">Form Coupon</h4>
+                                        <a class="btn btn-primary" style="float: right"
+                            href="{{ route('coupons.index') }}" role="button">Quay lại</a>
                                     </div><!-- end card header -->
                                     <div class="card-body">
 

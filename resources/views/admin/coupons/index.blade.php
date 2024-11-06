@@ -33,7 +33,7 @@
                                 <th>Discount</th>
 
                                 <th> Limit</th>
-                                <th> Exist</th>
+                                <th> Used</th>
                                 <th> Status</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
@@ -48,7 +48,7 @@
                                     <td>{{ $item->discount_value }} {{ $item->discount_type ? 'VND' : '%' }}</td>
 
                                     <td>{{ $item->coupon_limit }}</td>
-                                    <td>{{ $item->coupon_exist }}</td>
+                                    <td>{{ $item->coupon_used }}</td>
                                     <td>
                                         @if ($item->coupon_status)
                                             <button disabled class="btn btn-success">Valid</button>
@@ -59,11 +59,12 @@
                                     <td> {{ $item->start_date }} </td>
                                     <td> {{ $item->end_date }} </td>
 
-                                    <td style="width: 180px;display: flex">
+                                    <td style="display: flex">
+                                        <a class="btn btn-warning mr-2" href="{{ route('coupons.show', $item) }}"
+                                            role="button">Show</a>
                                         <a class="btn btn-dark mr-2" href="{{ route('coupons.edit', $item) }}"
                                             role="button">Edit</a>
-                                            <a class="btn btn-warning mr-2" href="{{ route('coupons.show', $item) }}"
-                                            role="button">Show</a>
+
                                         <form action="{{ route('coupons.destroy', $item) }}" method="post"
                                             enctype="multipart/form-data">
                                             @csrf

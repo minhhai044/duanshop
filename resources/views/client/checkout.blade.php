@@ -3,22 +3,6 @@
     Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co
 @endsection
 @section('content')
-    <!-- Start Hero Section -->
-    {{-- <div class="hero">
-				<div class="container">
-					<div class="row justify-content-between">
-						<div class="col-lg-5">
-							<div class="intro-excerpt">
-								<h1>Checkout</h1>
-							</div>
-						</div>
-						<div class="col-lg-7">
-							
-						</div>
-					</div>
-				</div>
-			</div> --}}
-    <!-- End Hero Section -->
 
     <div class="untree_co-section">
         <form action="{{ route('store.checkout') }}" method="post">
@@ -94,14 +78,16 @@
                             <div class="col-md-12">
                                 <h2 class="h3 mb-3 text-black">Your Order</h2>
                                 <div class="p-3 p-lg-5 border bg-white">
-                                    <table class="table site-block-order-table mb-5">
-                                        <thead>
-                                            <th>Product</th>
-                                            <th>Quantity</th>
-                                            <th>Total</th>
+                                    <table class="table table-striped table-bordered mb-5">
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Quantity</th>
+                                                <th>Total</th>
+                                                <th>Discount</th> <!-- Cột giảm giá -->
+                                            </tr>
                                         </thead>
                                         <tbody>
-
                                             @foreach ($productVariants as $item)
                                                 <tr>
                                                     <td>{{ $item->product->pro_name }}</td>
@@ -112,35 +98,59 @@
                                                             @endif
                                                         @endforeach
                                                     </td>
+
+                                                    <!-- Cột Total: Tính tổng giá trị sản phẩm -->
                                                     @foreach ($item->cartitem as $value)
                                                         @if ($value->cart_id == $item->cart_id)
-                                                            @if (!empty($item->product->pro_price_sale))
-                                                                <td>
-                                                                    {{ number_format($value->cart_item_quantity * $item->product->pro_price_sale) }}
-                                                                    đ
-                                                                </td>
-                                                            @endif
+                                                            <td>{{ number_format($value->cart_item_quantity * $item->product->pro_price_sale) }}
+                                                                đ</td>
                                                         @endif
                                                     @endforeach
 
+                                                    <!-- Cột giảm giá: Hiển thị giảm giá -->
+                                                    <td>
+                                                        @if ($dataCouponsProduct)
+                                                            @foreach ($dataCouponsProduct as $couponsItem)
+                                                                @if ($couponsItem->product->id == $item->product->id)
+                                                                    @if ($coupons['discount_type'])
+                                                                        <span
+                                                                            class="text-danger">-{{ number_format($coupons['discount_value']) }}
+                                                                            đ</span>
+                                                                    @else
+                                                                        <span
+                                                                            class="text-danger">-{{ number_format($item->product->pro_price_sale * ($coupons['discount_value'] / 100) * $value->cart_item_quantity) }}
+                                                                            đ</span>
+                                                                    @endif
+                                                                @endif
+                                                            @endforeach
+                                                        @else
+                                                            <span class="text-muted">No Discount</span>
+                                                        @endif
+                                                    </td>
+
                                                 </tr>
-                                                <input type="hidden" name="order_total_price" value="{{ $total }}">
                                             @endforeach
 
-                                            <tr>
-                                                <td colspan="2" class="text-black font-weight-bold"><strong>Cart
-                                                        Subtotal</strong></td>
-                                                <td class="text-black">{{ number_format($total) }} đ</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" class="text-black font-weight-bold"><strong>Order
-                                                        Total</strong></td>
-                                                <td class="text-black font-weight-bold"><strong>{{ number_format($total) }}
-                                                        đ</strong></td>
-                                            </tr>
 
+                                            <tr class="table-info">
+                                                <td colspan="3" class="text-black font-weight-bold"><strong>Order
+                                                        Subtotal</strong></td>
+                                                <td class="text-black">{{ number_format($subtotal) }} đ</td>
+                                            </tr>
+                                            <input type="hidden" name="order_total_price" value="{{ $total }}">
+
+                                            <tr class="table-success text-dark">
+                                                <td colspan="3" class="text-black font-weight-bold"><strong>Order
+                                                        Total</strong></td>
+                                                <td class="text-black font-weight-bold">
+                                                    <strong>{{ number_format($total) }} đ</strong>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
+
+
+
 
                                     <div class="mt-5">
                                         <h4 class="text-black">Phương thức thanh toán</h4>

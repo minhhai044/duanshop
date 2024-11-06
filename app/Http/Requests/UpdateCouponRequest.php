@@ -24,15 +24,17 @@ class UpdateCouponRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'coupon_code'       => ['required', Rule::unique(Coupon::class)->ignore($this->route('coupon'))],
-            'discount_type'     => 'required',
-            'discount_value'    => 'required',
+            'coupon_code'       => ['required', 'min:5', Rule::unique(Coupon::class)->ignore($this->route('coupon'))],
+            'discount_type'     => ['required', Rule::in(0, 1)],
+            'discount_value'    => 'required|numeric|min:0',
             'start_date'        => 'required',
             'end_date'          => 'required',
-            'coupon_limit'      => 'required',
-            'coupon_exist'      => 'nullable',
-            'coupon_status'     => 'nullable',
-            'coupon_description'=> 'nullable',
+            'coupon_limit'      => 'required|numeric|min:0',
+            'coupon_used'      => 'nullable|numeric|min:0',
+            'coupon_status'     => ['nullable', Rule::in(0, 1)],
+            'coupon_description' => 'nullable',
+            'product_id'        => 'nullable|array',
+            'product_id.*'      => 'nullable|integer',
         ];
     }
 }
