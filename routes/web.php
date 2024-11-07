@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CartController as AdminCartController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Client\CartController;
@@ -100,7 +101,7 @@ Route::controller(SocialiteController::class)->group(function () {
  * 'isadmin' : check nếu như bạn là type admin thì bạn có thể truy cập vào dashboard còn là member thì sẽ báo lỗi 403
  */
 Route::prefix('dashboard')->middleware(['auth', 'isadmin'])->group(function () {
-    Route::get('/',         [AdminUserController::class, 'index'])->name('dashboard');
+    Route::get('/',         [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/account',  [AdminUserController::class, 'list'])->name('dashboard.account');
 
