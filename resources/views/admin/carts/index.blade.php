@@ -72,14 +72,9 @@
                                             @method('PUT')
                                             <input type="hidden" name="status_order" value="{{ $item->status_order }}">
 
-                                            @if ($item->status_order !== STATUS_ORDER_PENDING || $item->status_order == STATUS_ORDER_CANCELED)
-                                                <button onclick="return confirm('Bạn có chắc chắn hủy không !!!')"
-                                                    class="btn btn-danger mr-2" disabled type="submit">Cancel
-                                                    Order</button>
-                                            @else
-                                                <button onclick="return confirm('Bạn có chắc chắn hủy không !!!')"
-                                                    class="btn btn-danger mr-2" type="submit">Cancel Order</button>
-                                            @endif
+                                            <button onclick="return confirm('Bạn có chắc chắn hủy không !!!')"
+                                            @disabled($item->status_order !== STATUS_ORDER_PENDING || $item->status_order == STATUS_ORDER_CANCELED || $item->status_payment == STATUS_PAYMENT_PAID )
+                                                class="btn btn-danger mr-2" type="submit">Cancel Order</button>
 
                                         </form>
                                     </td>

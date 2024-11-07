@@ -54,6 +54,9 @@ Route::prefix('/')->group(function () {
     Route::get('listorders', [OrderController::class, 'listorders'])->name('listorders')->middleware(['auth']);
     Route::get('{order}/orders', [OrderController::class, 'showOrders'])->name('show.orders')->middleware('auth');
     Route::put('{order}/orders', [OrderController::class, 'ordersCancel'])->name('orders.cancel');
+    Route::post('paymentVnpay', [OrderController::class, 'paymentVnpay'])->name('paymentVnpay');
+    Route::get('{thankyoupayment}/thankyoupayment', [OrderController::class, 'thankyoupayment'])->name('thankyoupayment');
+
 
     Route::get('{thankyou}/thankyou', [OrderMailController::class, 'sendMailOrders'])->name('thankyou');
 

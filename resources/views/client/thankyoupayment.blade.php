@@ -5,6 +5,8 @@
 @section('content')
 
 
+
+
     <div class="untree_co-section">
         <div class="container">
             <div class="row">
@@ -20,7 +22,7 @@
                     </span>
                     <h2 class="display-3 text-black">Thank you!</h2>
                     <p class="lead mb-5">You order was successfuly completed.</p>
-                    <p><a href="{{route('shop')}}" class="btn btn-sm btn-success">Back to shop</a></p>
+                    <p><a href="{{route('listorders')}}" class="btn btn-sm btn-success">Back to Order</a></p>
                 </div>
             </div>
         </div>

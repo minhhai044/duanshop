@@ -66,7 +66,7 @@ class CartService
                                         $priceSub = $item->product->pro_price_sale * $value->cart_item_quantity;
                                     } else {
                                         $price = ($item->product->pro_price_sale - ($item->product->pro_price_sale * ($coupons['discount_value'] / 100))) * $value->cart_item_quantity;
-                                        $priceSub = $item->product->pro_price_sale* $value->cart_item_quantity;
+                                        $priceSub = $item->product->pro_price_sale * $value->cart_item_quantity;
                                     }
                                 } else {
                                     foreach ($item->cartitem as $value) {
@@ -127,7 +127,6 @@ class CartService
                 }
                 $total += $price;
                 $subtotal += $priceSub;
-
             }
         }
         return [

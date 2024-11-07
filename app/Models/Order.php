@@ -39,14 +39,14 @@ class Order extends Model
         'method_payment',
         'status_payment',
         'order_total_price',
+        'order_sku',
     ];
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-
-
 }

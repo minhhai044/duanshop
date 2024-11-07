@@ -214,7 +214,8 @@ a.more {
     transition: all 0.3s ease;
 }
 
-.btn-outline-dark:hover, .btn-check:checked + .btn-outline-dark {
+.btn-outline-dark:hover,
+.btn-check:checked + .btn-outline-dark {
     background-color: #000;
     color: #fff;
 }
@@ -236,8 +237,6 @@ a.more {
     transform: scale(1.2);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
-
-
 
 .section-title {
     color: #2f2f2f;
@@ -892,7 +891,7 @@ textarea {
     width: auto;
 }
 .btn-primary {
-    background-color: #5A67D8;
+    background-color: #5a67d8;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -901,5 +900,44 @@ textarea {
 .btn-primary:hover {
     background-color: #434190;
 }
+.custom-table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
 
+.custom-table thead {
+    background-color: #343a40;
+    color: #ffffff;
+}
 
+.custom-table th, .custom-table td {
+    vertical-align: middle;
+}
+
+.custom-table tbody tr {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.custom-table tbody tr:hover {
+    transform: scale(1.02);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.alert {
+    font-size: 0.95rem;
+}
+
+.btn-outline-success:hover {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}

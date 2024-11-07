@@ -153,21 +153,31 @@
 
 
                                     <div class="mt-5">
-                                        <h4 class="text-black">Phương thức thanh toán</h4>
-                                        <div class="mt-3">
-
-
-                                            <input checked type="radio" name="method_payment" value="cash_delivery"
-                                                id="">
-                                            {{ methodPayment(METHOD_PAYMENT_DELIVERY) }} <br>
-                                            <input type="radio" name="method_payment" value="vnpay_payment"
-                                                id="">
-                                            {{ methodPayment(METHOD_PAYMENT_VNPAY) }}
-
-
-
+                                        <h4 class="text-black fw-bold mb-3">Phương thức thanh toán</h4>
+                                        <div class="list-group">
+                                            <!-- Phương thức thanh toán khi nhận hàng -->
+                                            <label class="list-group-item d-flex align-items-center gap-3">
+                                                <input class="form-check-input flex-shrink-0" type="radio" name="method_payment" value="cash_delivery" id="cash_delivery" checked>
+                                                <div>
+                                                    <span class="fw-semibold">{{ methodPayment(METHOD_PAYMENT_DELIVERY) }}</span>
+                                                    <p class="mb-0 text-muted small">Thanh toán khi nhận hàng</p>
+                                                </div>
+                                            </label>
+                                    
+                                            <!-- Phương thức thanh toán qua VNPay -->
+                                            <label class="list-group-item d-flex align-items-center gap-3 mt-2">
+                                                <input class="form-check-input flex-shrink-0" type="radio" name="method_payment" value="vnpay_payment" id="vnpay_payment">
+                                                <div>
+                                                    <span class="fw-semibold">{{ methodPayment(METHOD_PAYMENT_VNPAY) }}</span>
+                                                    <p class="mb-0 text-muted small">Thanh toán qua VNPay an toàn và nhanh chóng</p>
+                                                </div>
+                                            </label>
                                         </div>
                                     </div>
+                                    
+                                    
+                                    <input type="hidden" class="form-control" name="order_sku"
+                                        value="{{ strtoupper(\Str::random(10)) }}">
 
                                     <div class="form-group mt-4">
                                         <button class="btn btn-success py-3 w-100 btn-block">Place Order</button>
