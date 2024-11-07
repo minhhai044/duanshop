@@ -70,8 +70,28 @@ class DashboardController extends Controller
             ->where('method_payment', METHOD_PAYMENT_VNPAY)
             ->groupBy('method_payment')
             ->first();
+        //
+
+        //Tính doanh thu của từng tháng
+        $totalTwMonth = [];
+        for ($i = 0; $i < 12; $i++) {
+            $stMonth = now()->startOfMonthParam($i + 1)->toDateString();
+            $edMonth = now()->endOfMonthParams($i + 1)->toDateString();
+            $data = 0;
+            $data = DB::table('orders')
+                ->select(DB::raw("SUM(order_total_price) as total"))
+                ->whereBetween('created_at', [$stMonth, $edMonth])
+                ->where('status_payment', STATUS_PAYMENT_PAID)
+                ->first();
+            $dataTotal = $data->total;
+            $dataTotal ??= 0;
+            $totalTwMonth[] = $dataTotal;
+        }
+        // dd($totalTwMonth);
+
+
 
         // dd($count_warning->count);
-        return view('admin.index', compact('total_price_month', 'total_price_year', 'avg_total', 'count_success', 'count_warning', 'count_canceled', 'payment_deliver', 'payment_vnpay'));
+        return view('admin.index', compact('total_price_month', 'total_price_year', 'avg_total', 'count_success', 'count_warning', 'count_canceled', 'payment_deliver', 'payment_vnpay', 'totalTwMonth'));
     }
 }

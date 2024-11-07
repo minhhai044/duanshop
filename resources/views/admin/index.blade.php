@@ -106,7 +106,7 @@
                 <div class="card shadow mb-4">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Doanh thu 12 tháng năm {{ now()->year }}</h6>
                         <div class="dropdown no-arrow">
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -190,5 +190,7 @@
 <script>
     let payment_deliver = @json($payment_deliver);
     let payment_vnpay = @json($payment_vnpay);
+    let totalTwMonth = @json($totalTwMonth);
 </script>
 <script src="{{ asset('/admin/js/demo/chart-pie-demo.js') }}"></script>
+<script src="{{ asset('/admin/js/demo/chart-area-demo.js') }}"></script>
