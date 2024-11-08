@@ -22,3 +22,25 @@
 
 <!-- Page level custom scripts -->
 <script src="/admin/js/demo/datatables-demo.js"></script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://code.highcharts.com/dashboards/dashboards.js"></script>
+<script src="https://code.highcharts.com/dashboards/modules/layout.js"></script>
+
+
+
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+
+
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
+<script src="/admin/js/demo/chart-quantity-category-product.js"></script>
+<script src="/admin/js/demo/chart-hot-pay-product.js"></script>
+<script src="/admin/js/demo/chart-pay-day.js"></script>

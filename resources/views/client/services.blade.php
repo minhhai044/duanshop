@@ -1,6 +1,6 @@
 @extends('client.layouts.master')
 @section('document')
-    Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co
+    ShopSieuReOk
 @endsection
 @section('content')
     <!-- Start Hero Section -->

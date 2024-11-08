@@ -184,6 +184,55 @@
         </div>
 
 
+        <div class="highcharts-dashboards-wrapper w-100 shadow-box">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Số lượng mỗi sản phẩm</h6>
+            </div>
+
+            <div id="container"></div>
+            <pre id="csv">Vegetable,Amount
+                @foreach ($quantityPro as $value)
+                {{ "$value->pro_name,$value->quantityproduct" }}
+                @endforeach
+            </pre>
+        </div>
+        {{-- Top 5 --}}
+        <figure class="highcharts-figure mt-5 shadow-box">
+            <div class="d-flex">
+                <div class="tablecontainer">
+                    <div id="tablecontainer" class=""></div>
+                </div>
+                <div class="datatable">
+                    <table class="table table-striped table-hover align-middle h-100" id="datatable">
+                        <thead class="">
+                            <tr>
+                                <th>Tên sản phẩm</th>
+                                <th>Số lượng</th>
+                                <th>Giá</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($top5product as $item)
+                                <tr>
+                                    <td>{{ $item->pro_name }}</td>
+                                    <td>{{ $item->quantity }}</td>
+                                    <td>{{ $item->pro_price_regular }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </figure>
+        {{-- Ngày trong tháng --}}
+        <figure class="highcharts-figure shadow-box mt-5">
+            <div id="containerday"></div>
+
+            <button id="plain" class="highcharts-demo-button">Biểu đồ cột</button>
+            <button id="inverted" class="highcharts-demo-button">biểu đồ thanh ngang</button>
+            <button id="polar" class="highcharts-demo-button">Biểu đồ tròn</button>
+        </figure>
 
     </div>
 @endsection
@@ -191,6 +240,7 @@
     let payment_deliver = @json($payment_deliver);
     let payment_vnpay = @json($payment_vnpay);
     let totalTwMonth = @json($totalTwMonth);
+    let total_day = @json($total_day);
 </script>
 <script src="{{ asset('/admin/js/demo/chart-pie-demo.js') }}"></script>
 <script src="{{ asset('/admin/js/demo/chart-area-demo.js') }}"></script>
