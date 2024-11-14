@@ -25,11 +25,13 @@
 
                         <form action="{{ route('search') }}" class="dropdown-item" method="post">
                             @csrf
-                            <input type="text" name="keysearch">
+                            <input type="text" name="keysearch" id="keysearch">
                             <button type="submit">Search</button>
 
                         </form>
+                        <ul class="dropdown-menu show w-100 mt-3" id="listmenu">
 
+                        </ul>
                     </ul>
                 </li>
                 <li class="mx-3" style="width: 34px; height:44px "><a href="" class="nav-link"
@@ -64,5 +66,4 @@
             </ul>
         </div>
     </div>
-
 </nav>

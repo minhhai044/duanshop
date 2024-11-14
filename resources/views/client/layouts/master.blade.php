@@ -16,7 +16,7 @@
 
     <meta name="description" content="" />
     <meta name="keywords" content="bootstrap, bootstrap4" />
-
+    
     <!-- Bootstrap CSS -->
     @include('client.layouts.partials.css')
     <title>@yield('document')</title>

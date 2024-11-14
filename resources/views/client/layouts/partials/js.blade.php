@@ -3,3 +3,4 @@
 <script src="/client/js/quantityCart.js"></script>
 <script src="/client/js/custom.js"></script>
 <script src="/client/js/active.js"></script>
+<script src="/client/js/ajax.js"></script>
