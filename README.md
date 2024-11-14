@@ -1,5 +1,8 @@
 Dashboard thống kê doanh thu 
 ![image](https://github.com/user-attachments/assets/85043426-a1e7-46a1-a426-731daeab2e29)
+![image](https://github.com/user-attachments/assets/199279fa-c554-4533-a4fc-1fedcc1e3232)
+![image](https://github.com/user-attachments/assets/b55e338f-f471-498a-bc9c-18b31e7a08d5)
+![image](https://github.com/user-attachments/assets/96ee3ab2-a8b2-4388-894b-b9d4b1a28884)
 
 Quản lý coupons theo % và VND 
 ![image](https://github.com/user-attachments/assets/e063acc8-d8bf-4034-b203-cccffe8aafe3)
