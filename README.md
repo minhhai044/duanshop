@@ -46,6 +46,9 @@ Trang đơn hàng
 Trang chi tiết đơn hàng
 ![image](https://github.com/user-attachments/assets/92d6c866-2c3a-4dc2-80e9-086c08118bc2)
 
+Search khi nhập thông tin sản phầm 
+![image](https://github.com/user-attachments/assets/022531dc-8c41-4418-aacc-1c7bc6ceed66)
+
 Lọc sản phẩm theo danh mục + price 
 ![image](https://github.com/user-attachments/assets/847ed9b3-64a8-482a-be5e-548ebd1c8fb1)
 ![image](https://github.com/user-attachments/assets/c1da3d8d-1f9f-41dd-ab11-e42384d47c65)
