@@ -186,65 +186,28 @@
                         </div>
                         {{-- End Tag --}}
 
-                        {{-- Tag --}}
+                        {{-- Gallery --}}
                         <div class="row mt-3">
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
                                         <h4 class="card-title mb-0 flex-grow-1">Gallery Image</h4>
+                                        <p class="btn btn-primary" id="add_gallery_update">Thêm gallery</p>
                                     </div><!-- end card header -->
-                                    <div class="card-body">
+                                    <div id="body-gallery_update" class="card-body">
 
                                         @foreach ($data->galleries as $item)
-                                            <label for="image_{{ $loop->iteration }}" class="my-3">Gallery
-                                                {{ $loop->iteration }}</label>
-                                            <input type="file" name="image_galleries[{{ $item->id }}]"
-                                                class="form-control p-1" id="image_{{ $loop->iteration }}">
+                                            <div class="mb-3 d-flex align-items-center">
+                                                @if ($item->image && Storage::exists($item->image))
+                                                    <label for="image_gallery" class="col-4 col-form-label">
+                                                        <img src="{{ Storage::url($item->image) }}" width="100px"
+                                                            height="100px" alt=""></label>
+                                                @endif
 
-                                            @if ($item->image && Storage::exists($item->image))
-                                                <img src="{{ Storage::url($item->image) }}" width="100px"
-                                                    alt=""> <br>
-                                            @endif
+                                                <input type="file" name="image_galleries[{{ $item->id }}]"
+                                                    class="form-control p-1 " id="image_gallery">
+                                            </div>
                                         @endforeach
-
-
-                                        {{-- <div class="mb-3 row">
-                                            <label for="image_1" class="col-4 col-form-label">Gallery 1</label>
-                                            <div class="col-8">
-                                                <input type="file" class="form-control p-1" name="image_galleries[]"
-                                                    id="image_1" />
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3 row">
-                                            <label for="image_2" class="col-4 col-form-label">Gallery 2</label>
-                                            <div class="col-8">
-                                                <input type="file" class="form-control p-1" name="image_galleries[]"
-                                                    id="image_2" />
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="image_3" class="col-4 col-form-label">Gallery 3</label>
-                                            <div class="col-8">
-                                                <input type="file" class="form-control p-1" name="image_galleries[]"
-                                                    id="image_3" />
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="image_4" class="col-4 col-form-label">Gallery 4</label>
-                                            <div class="col-8">
-                                                <input type="file" class="form-control p-1" name="image_galleries[]"
-                                                    id="image_4" />
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="image_5" class="col-4 col-form-label">Gallery 5</label>
-                                            <div class="col-8">
-                                                <input type="file" class="form-control p-1" name="image_galleries[]"
-                                                    id="image_5" />
-                                            </div>
-                                        </div> --}}
-
                                     </div>
                                 </div>
                             </div>
@@ -253,7 +216,6 @@
                         {{-- End Gallery --}}
                         <button type="submit" class="btn btn-primary w-100 my-5">Update</button>
                     </form>
-
                 </div>
             </div>
         </div>

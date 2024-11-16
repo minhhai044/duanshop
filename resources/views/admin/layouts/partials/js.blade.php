@@ -44,3 +44,4 @@
 <script src="/admin/js/demo/chart-quantity-category-product.js"></script>
 <script src="/admin/js/demo/chart-hot-pay-product.js"></script>
 <script src="/admin/js/demo/chart-pay-day.js"></script>
+<script src="/admin/js/products.js"></script>

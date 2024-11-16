@@ -177,49 +177,22 @@
                         </div>
                         {{-- End Tag --}}
 
-                        {{-- Tag --}}
+                        {{-- Gallery --}}
                         <div class="row mt-3">
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
                                         <h4 class="card-title mb-0 flex-grow-1">Gallery Image</h4>
+                                        <p class="btn btn-primary" id="add_gallery">Thêm gallery</p>
                                     </div><!-- end card header -->
-                                    <div class="card-body">
+                                    <div id="body-gallery" class="card-body">
 
                                         <div class="mb-3 row">
-                                            <label for="image_1" class="col-4 col-form-label">Gallery 1</label>
+                                            <label for="image_gallery" class="col-4 col-form-label"
+                                                style="padding-left: 25px;">Gallery Image</label>
                                             <div class="col-8">
                                                 <input type="file" class="form-control p-1" name="image_galleries[]"
-                                                    id="image_1" />
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3 row">
-                                            <label for="image_2" class="col-4 col-form-label">Gallery 2</label>
-                                            <div class="col-8">
-                                                <input type="file" class="form-control p-1" name="image_galleries[]"
-                                                    id="image_2" />
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="image_3" class="col-4 col-form-label">Gallery 3</label>
-                                            <div class="col-8">
-                                                <input type="file" class="form-control p-1" name="image_galleries[]"
-                                                    id="image_3" />
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="image_4" class="col-4 col-form-label">Gallery 4</label>
-                                            <div class="col-8">
-                                                <input type="file" class="form-control p-1" name="image_galleries[]"
-                                                    id="image_4" />
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="image_5" class="col-4 col-form-label">Gallery 5</label>
-                                            <div class="col-8">
-                                                <input type="file" class="form-control p-1" name="image_galleries[]"
-                                                    id="image_5" />
+                                                    id="image_gallery" />
                                             </div>
                                         </div>
 

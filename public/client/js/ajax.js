@@ -3,9 +3,7 @@ $(function () {
         let timeout;
 
         $("#listmenu").hide();
-        $("#keysearch")
-            .delay(2000)
-            .keyup(function () {
+        $("#keysearch").keyup(function () {
                 clearTimeout(timeout);
                 let keysearch = $(this).val().trim();
                 timeout = setTimeout(() => {

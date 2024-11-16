@@ -184,7 +184,7 @@
         </div>
 
 
-        <div class="highcharts-dashboards-wrapper w-100 shadow-box">
+        <div class="highcharts-dashboards-wrapper shadow-box">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Số lượng mỗi sản phẩm</h6>
             </div>

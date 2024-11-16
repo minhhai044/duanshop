@@ -1,7 +1,7 @@
 <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
 
     <div class="container">
-        <a class="navbar-brand" href="{{ route('index') }}"><img width="110px" height="80px"
+        <a class="navbar-brand" href="{{ route('index') }}"><img width="100px" height="65px"
                 src="{{ '/client/images/logoshop.png' }}" alt=""></a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"

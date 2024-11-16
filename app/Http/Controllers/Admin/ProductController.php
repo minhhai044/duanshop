@@ -96,11 +96,22 @@ class ProductController extends Controller
                 $dataProductGalleries[$key] = Storage::put('galleries', $image);
             }
         }
+        // Thêm gallary khi update
+        $dataGalleriesUpdateTmp = $request->add_galleries ?? [];
 
+        $dataGalleriesUpdate = [];
+
+        foreach ($dataGalleriesUpdateTmp as $image) {
+
+            if (!empty($image)) {
+
+                $dataGalleriesUpdate[] = Storage::put('galleries', $image);
+            }
+        }
         //Tag
         $dataProductTags = $request->tags;
 
-        return [$dataProduct, $dataProductVariants, $dataProductTags, $dataProductGalleries];
+        return [$dataProduct, $dataProductVariants, $dataProductTags, $dataProductGalleries, $dataGalleriesUpdate];
     }
     public function store(StoreProductRequest $request)
     {
@@ -180,10 +191,11 @@ class ProductController extends Controller
                 $dataProduct,
                 $dataProductVariants,
                 $dataProductTags,
-                $dataProductGalleries
+                $dataProductGalleries,
+                $dataGalleriesUpdate
             ) = $this->ProductLogicRequest($request);
 
-            DB::transaction(function () use ($dataProduct, $dataProductVariants, $dataProductTags, $dataProductGalleries, $id) {
+            DB::transaction(function () use ($dataProduct, $dataProductVariants, $dataProductTags, $dataProductGalleries, $id, $dataGalleriesUpdate) {
 
                 $product = $this->productService->findIDProduct($id);
 
@@ -217,6 +229,12 @@ class ProductController extends Controller
 
                     $product->galleries()->where('id', $key)->update(['image' => $image]);
                 }
+                if (!empty($dataGalleriesUpdate)) {
+                    foreach ($dataGalleriesUpdate ?? [] as $item) {
+
+                        $product->galleries()->create(['image' => $item]);
+                    }
+                }
             });
             return redirect()
                 ->route('products.index')
@@ -224,6 +242,11 @@ class ProductController extends Controller
         } catch (\Throwable $th) {
             if (!empty($dataProduct['pro_img_thumbnail']) && Storage::exists($dataProduct['pro_img_thumbnail'])) {
                 Storage::delete($dataProduct['pro_img_thumbnail']);
+            }
+            foreach ($dataProductGalleries as $item) {
+                if (!empty($item) && Storage::exists($item)) {
+                    Storage::delete($item);
+                }
             }
             Log::error(__CLASS__ . '@' . __FUNCTION__, [$th->getMessage()]);
 
