@@ -502,16 +502,16 @@ a.more {
     z-index: -1;
 }
 
-.testimonial-section {
+/* .testimonial-section {
     padding: 3rem 0 7rem 0;
-}
+} */
 
 .testimonial-slider-wrap {
     position: relative;
 }
-.testimonial-slider-wrap .tns-inner {
+/* .testimonial-slider-wrap .tns-inner {
     padding-top: 30px;
-}
+} */
 .testimonial-slider-wrap .item .testimonial-block blockquote {
     font-size: 16px;
 }

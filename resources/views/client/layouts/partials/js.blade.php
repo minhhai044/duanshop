@@ -4,3 +4,4 @@
 <script src="/client/js/custom.js"></script>
 <script src="/client/js/active.js"></script>
 <script src="/client/js/ajax.js"></script>
+@vite('resources/js/coupon.js')

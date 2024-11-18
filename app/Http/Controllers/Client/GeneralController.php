@@ -32,7 +32,7 @@ class GeneralController extends Controller
     }
     public function index()
     {
-        $products = $this->productService->getFeaturedProduct(3);
+        $products = $this->productService->getFeaturedProduct(4);
         return view('client.index', compact('products'));
     }
     public function shop()

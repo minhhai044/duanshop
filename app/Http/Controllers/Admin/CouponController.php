@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\CouponEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCouponRequest;
 use App\Http\Requests\UpdateCouponRequest;
@@ -45,6 +46,8 @@ class CouponController extends Controller
             DB::transaction(function () use ($dataCoupon, $products) {
                 $Coupon = Coupon::query()->create($dataCoupon);
                 $Coupon->products()->attach($products);
+                //Sự kiện
+                broadcast(new CouponEvent($Coupon));
             });
             return redirect()->route('coupons.index')->with('success', 'Thêm mới thành công !!!');
         } catch (\Throwable $th) {

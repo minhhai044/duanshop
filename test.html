@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: slide-in 0.5s ease-out, fade-out 0.5s ease-out 5s forwards;
+        }
+
+        .toast h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .toast button {
+            background-color: #f0ad4e;
+            border: none;
+            padding: 5px 10px;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        @keyframes slide-in {
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fade-out {
+            to {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="toast" id="coupon-toast">
+        <h4>🎉 Coupon mới: <span>SALE20</span></h4>
+        <p>Giảm 20% cho đơn từ 500k. Hạn sử dụng: 23/11/2024.</p>
+        <button onclick="copyCoupon()">Sao chép mã</button>
+    </div>
+</body>
+
+</html>
