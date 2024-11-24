@@ -47,7 +47,7 @@
                         </div>
                     @endforeach
 
-                    {{ $products->links() }}
+                    {{-- {{ $products->links() }} --}}
                 </div>
             @else
                 <div class="text-center">

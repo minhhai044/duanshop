@@ -20,9 +20,7 @@ class CouponController extends Controller
      */
     public function index()
     {
-        // dd(Carbon::now());
-        // dd(now());
-        $Coupons = Coupon::query()->latest('id')->paginate(10);
+        $Coupons = Coupon::query()->latest('id')->get();
         return view('admin.coupons.index', compact('Coupons'));
     }
 

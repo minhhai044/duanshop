@@ -14,9 +14,11 @@
         "laravel/sanctum": "^3.3",
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.8",
+        "predis/predis": "^2.3",
         "pusher/pusher-php-server": "^7.2"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.14",
         "fakerphp/faker": "^1.9.1",
         "getsolaris/laravel-make-service": "^1.1",
         "laravel/pint": "^1.0",

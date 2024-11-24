@@ -10,7 +10,7 @@ use App\Services\CategoryService;
 use App\Services\ColorService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Cache;
 
 class GeneralController extends Controller
 {
@@ -37,7 +37,11 @@ class GeneralController extends Controller
     }
     public function shop()
     {
-        $products = $this->productService->paginateProduct(8);
+
+        $products = Cache::rememberForever('products', function () {
+            return $this->productService->getProduct([]);
+        });
+        // dd($products);
         $categories = $this->categoryService->pluckCategory('cate_name', 'id');
         // dd($categories);
         return view('client.shop', compact('products', 'categories'));

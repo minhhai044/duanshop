@@ -12,6 +12,7 @@ use App\Services\ColorService;
 use App\Services\GalleryService;
 use App\Services\ProductService;
 use App\Services\TagService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -41,8 +42,9 @@ class ProductController extends Controller
     }
     public function index()
     {
-
-        $products = $this->productService->getProduct(['category']);
+        $products = Cache::rememberForever('products',function (){
+            return $this->productService->getProduct(['category']);
+        });
 
         return view('admin.products.index', compact('products'));
     }
@@ -140,6 +142,7 @@ class ProductController extends Controller
 
                     $product->galleries()->create(['image' => $item]);
                 }
+                Cache::forget('products');
             });
             return redirect()
                 ->route('products.index')
@@ -235,6 +238,8 @@ class ProductController extends Controller
                         $product->galleries()->create(['image' => $item]);
                     }
                 }
+                Cache::forget('products');
+
             });
             return redirect()
                 ->route('products.index')
@@ -277,6 +282,8 @@ class ProductController extends Controller
                         Storage::delete($item);
                     }
                 }
+                Cache::forget('products');
+
             });
             return redirect()->route('products.index')->with('success', 'Thao tác thành công!');
         } catch (\Throwable $th) {
