@@ -23,7 +23,8 @@
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                     Doanh thu tháng {{ now()->month }} </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ number_format($total_price_month->total) }} VND</div>
+                                    {{-- {{ number_format($total_price_month->total) }}  --}}
+                                    VND</div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -42,7 +43,8 @@
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                     Doanh thu năm {{ now()->year }}</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ number_format($total_price_year->total) }} VND</div>
+                                    {{-- {{ number_format($total_price_year->total) }}  --}}
+                                    VND</div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -61,7 +63,8 @@
                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Trung bình mỗi đơn hàng
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ number_format($avg_total->total) }} VND</div>
+                                    {{-- {{ number_format($avg_total->total) }} --}}
+                                    VND</div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -79,17 +82,23 @@
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                     Hoàn tất</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $count_success->count }}</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{-- {{ $count_success->count }} --}}
+                                </div>
                             </div>
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                     Đang xử lý </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $count_warning->count }}</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{-- {{ $count_warning->count }} --}}
+                                </div>
                             </div>
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                     Đã hủy</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $count_canceled->count }}</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{-- {{ $count_canceled->count }} --}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -161,10 +170,14 @@
                         <!-- Căn chỉnh các phần tử theo chiều ngang -->
                         <div class="mt-1 text-center small d-flex justify-content-center">
                             <span class="mr-4">
-                                <span>{{ number_format($payment_deliver->total) }} VND</span>
+                                <span>
+                                    {{-- {{ number_format($payment_deliver->total) }}  --}}
+                                    VND</span>
                             </span>
                             <span class="ml-4">
-                                <span>{{ number_format($payment_vnpay->total) }} VND</span>
+                                <span>
+                                    {{-- {{ number_format($payment_vnpay->total) }} --}}
+                                     VND</span>
                             </span>
                         </div>
 
@@ -191,9 +204,9 @@
 
             <div id="container"></div>
             <pre id="csv">Vegetable,Amount
-                @foreach ($quantityPro as $value)
-                {{ "$value->pro_name,$value->quantityproduct" }}
-                @endforeach
+                {{-- @foreach ($quantityPro as $value)
+{{ "$value->pro_name,$value->quantityproduct" }}
+@endforeach --}}
             </pre>
         </div>
         {{-- Top 5 --}}
@@ -212,13 +225,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($top5product as $item)
+                            {{-- @foreach ($top5product as $item)
                                 <tr>
                                     <td>{{ $item->pro_name }}</td>
                                     <td>{{ $item->quantity }}</td>
                                     <td>{{ $item->pro_price_regular }}</td>
                                 </tr>
-                            @endforeach
+                            @endforeach --}}
                         </tbody>
                     </table>
 
@@ -236,11 +249,11 @@
 
     </div>
 @endsection
-<script>
+{{-- <script>
     let payment_deliver = @json($payment_deliver);
     let payment_vnpay = @json($payment_vnpay);
     let totalTwMonth = @json($totalTwMonth);
     let total_day = @json($total_day);
 </script>
 <script src="{{ asset('/admin/js/demo/chart-pie-demo.js') }}"></script>
-<script src="{{ asset('/admin/js/demo/chart-area-demo.js') }}"></script>
+<script src="{{ asset('/admin/js/demo/chart-area-demo.js') }}"></script> --}}
