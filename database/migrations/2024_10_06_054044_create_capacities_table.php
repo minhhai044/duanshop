@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('capacities', function (Blueprint $table) {
             $table->id();
             $table->string('cap_name');
-            $table->integer('cap_discount')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

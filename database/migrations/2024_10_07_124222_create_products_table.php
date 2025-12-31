@@ -15,16 +15,20 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Category::class)->constrained();
-            $table->string('pro_name',100)->unique();
-            $table->string('pro_sku')->unique();
-            $table->text('pro_description')->nullable();
-            $table->string('pro_img_thumbnail')->nullable();
-            $table->decimal('pro_price_regular',10,2);
-            $table->decimal('pro_price_sale',10,2)->nullable();
-            $table->unsignedBigInteger('views')->default(0);
+            $table->string('pro_name', 100)->unique();
+            $table->string('pro_sku')->unique(); // Mã sản phẩm
+            $table->string('pro_slug', 255)->unique(); // Đường dẫn
+            $table->text('pro_description')->nullable(); // Mô tả
+            $table->string('pro_img_thumbnail')->nullable(); // Ảnh chính
+            $table->decimal('pro_price_regular', 15, 0)->default(0);
+            $table->decimal('pro_price_sale', 15, 0)->default(0);
+            $table->unsignedBigInteger('pro_views')->default(0);
             $table->boolean('pro_featured')->default(0);
+            $table->decimal('pro_prating', 10, 1)->default(0)->comment('Đánh giá ');
+            $table->boolean('is_hot')->default(0)->comment("0 : Không hot, 1 : Có hot");
+            $table->boolean('is_active')->default(true);
+
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->foreignIdFor(Color::class)->constrained();
             $table->foreignIdFor(Capacity::class)->constrained();
             $table->unsignedInteger('quantity')->default(0);
+            $table->unsignedInteger('price')->default(0);
+            $table->unsignedInteger('price_sale')->default(0);
             $table->timestamps();
         });
     }

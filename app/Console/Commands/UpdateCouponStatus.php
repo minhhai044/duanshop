@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Coupon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UpdateCouponStatus extends Command
 {
@@ -29,5 +30,6 @@ class UpdateCouponStatus extends Command
         Coupon::where('end_date', '<=', now())
             ->where('coupon_status', '!=', 0) 
             ->update(['coupon_status' => 0]);
+           
     }
 }

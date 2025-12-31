@@ -68,7 +68,6 @@ class CartController extends Controller
 
         $productVariants = $this->cartService->showProductVariantsCart();
 
-
         $code = $request->validate([
             'coupon_code' => 'required'
         ]);
@@ -106,7 +105,7 @@ class CartController extends Controller
             $coupons = $data['coupons'];
             // session()->forget(['dataCouponsProduct', 'coupons']);
 
-            return view('client.cart', compact('productVariants', 'total', 'dataCouponsProduct', 'coupons','subtotal'));
+            return view('client.cart', compact('productVariants', 'total', 'dataCouponsProduct', 'coupons', 'subtotal'));
         } catch (\Throwable $th) {
             return view('client.cart');
         }
@@ -115,7 +114,15 @@ class CartController extends Controller
     {
         try {
             $cartItem = CartItem::query()->find($id);
+            
+            $dataCouponsProduct = session()->get('dataCouponsProduct') ?? [];
+            $couponss = array_filter($dataCouponsProduct, function ($item) use ($cartItem) {
+                return $item['id'] !== $cartItem->product_variant_id;
+            });
             $cartItem->delete();
+
+            session(['dataCouponsProduct' => $couponss]);
+
             return back()->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thao tác không thành công !!!');
@@ -124,6 +131,7 @@ class CartController extends Controller
     public function cartitemdeleteall(string $id)
     {
         $data =  CartItem::query()->where('cart_id', $id)->get();
+        session()->forget(['dataCouponsProduct', 'coupons']);
         foreach ($data as $value) {
             $value->delete();
         }
