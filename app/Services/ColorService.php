@@ -2,38 +2,98 @@
 
 namespace App\Services;
 
-use App\Repositories\ColorRepository;
+use App\Models\Color;
+use Illuminate\Support\Facades\Cache;
 
+/**
+ * Class ColorService
+ * @package App\Services
+ */
 class ColorService
 {
-    protected $colorRepository;
-    public function __construct(
-        ColorRepository $colorRepository
-    ) {
-        $this->colorRepository = $colorRepository;
-    }
+    /**
+     * Get all colors
+     */
     public function getColor()
     {
-        return $this->colorRepository->get();
+        return Color::orderBy('created_at', 'desc')->get();
     }
-    public function findIdColor($id)
-    {
-        return $this->colorRepository->find($id);
-    }
+
+    /**
+     * Create a new color
+     */
     public function createColor($data)
     {
-        return $this->colorRepository->create($data);
+        // Auto generate slug if empty
+        if (empty($data['slug'])) {
+            $data['slug'] = generateSlug($data['color_name']);
+        }
+        
+        // Set default is_active
+        $data['is_active'] = $data['is_active'] ?? true;
+        
+        $color = Color::create($data);
+        Cache::forget('colors');
+        return $color;
     }
+
+    /**
+     * Find color by ID
+     */
+    public function findIdColor($id)
+    {
+        return Color::findOrFail($id);
+    }
+
+    /**
+     * Update color
+     */
     public function updateColor($id, $data)
     {
-        return $this->colorRepository->update($id, $data);
+        $color = Color::findOrFail($id);
+        
+        // Auto generate slug if empty
+        if (empty($data['slug'])) {
+            $data['slug'] = generateSlug($data['color_name']);
+        }
+        
+        // Set default is_active
+        $data['is_active'] = $data['is_active'] ?? $color->is_active;
+        
+        $color->update($data);
+        Cache::forget('colors');
+        return $color;
     }
-    public function deleteColor($id)
-    {
-        return $this->colorRepository->delete($id);
-    }
+
+    /**
+     * Get colors for dropdown/select options
+     */
     public function pluckColor($column, $key)
     {
-        return $this->colorRepository->pluck($column, $key);
+        return Color::where('is_active', true)->pluck($column, $key);
+    }
+
+    /**
+     * Get active colors
+     */
+    public function getActiveColors()
+    {
+        return Cache::remember('active_colors', 3600, function () {
+            return Color::where('is_active', true)
+                ->orderBy('color_name')
+                ->get();
+        });
+    }
+
+    /**
+     * Toggle color status
+     */
+    public function toggleStatus($id)
+    {
+        $color = Color::findOrFail($id);
+        $color->update(['is_active' => !$color->is_active]);
+        Cache::forget('colors');
+        Cache::forget('active_colors');
+        return $color;
     }
 }

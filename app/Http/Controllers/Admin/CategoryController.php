@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreCategoryRequest;
-use App\Http\Requests\Admin\UpdateCategoryRequest;
+use App\Http\Requests\Admin\CategoryRequest;
 use App\Services\CategoryService;
 
 class CategoryController extends Controller
@@ -34,25 +33,10 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCategoryRequest $request)
+    public function store(CategoryRequest $request)
     {
         try {
-            $data = $request->validated();
-            
-            // Tự động tạo slug nếu không có
-            if (empty($data['slug'])) {
-                $data['slug'] = generateSlug($data['cate_name']);
-            }
-            
-            // Xử lý upload image
-            if ($request->hasFile('cate_image')) {
-                $data['cate_image'] = createImageStorage('categories', $request->file('cate_image'));
-            }
-            
-            // Set default is_active
-            $data['is_active'] = $data['is_active'] ?? true;
-            
-            $this->CategoryService->createCategory($data);
+            $this->CategoryService->createCategoryWithImage($request->validated(), $request);
             return redirect()->route('categories.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thêm mới không thành công !!!');
@@ -70,30 +54,10 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request, string $id)
+    public function update(CategoryRequest $request, string $id)
     {
         try {
-            $data = $request->validated();
-            $category = $this->CategoryService->findIdCategory($id);
-            
-            // Tự động tạo slug nếu không có
-            if (empty($data['slug'])) {
-                $data['slug'] = generateSlug($data['cate_name']);
-            }
-            
-            // Xử lý upload image
-            if ($request->hasFile('cate_image')) {
-                // Xóa ảnh cũ nếu có
-                if ($category->cate_image) {
-                    deleteImageStorage($category->cate_image);
-                }
-                $data['cate_image'] = createImageStorage('categories', $request->file('cate_image'));
-            }
-            
-            // Set default is_active
-            $data['is_active'] = $data['is_active'] ?? $category->is_active;
-            
-            $this->CategoryService->updateCategory($id, $data);
+            $this->CategoryService->updateCategoryWithImage($id, $request->validated(), $request);
             return redirect()->route('categories.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thao tác không thành công !!!');

@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreColorRequest;
-use App\Http\Requests\Admin\UpdateColorRequest;
+use App\Http\Requests\Admin\ColorRequest;
 use App\Services\ColorService;
 
 class ColorController extends Controller
@@ -34,20 +33,10 @@ class ColorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreColorRequest $request)
+    public function store(ColorRequest $request)
     {
         try {
-            $data = $request->validated();
-            
-            // Tự động tạo slug nếu không có
-            if (empty($data['slug'])) {
-                $data['slug'] = generateSlug($data['color_name']);
-            }
-            
-            // Set default is_active
-            $data['is_active'] = $data['is_active'] ?? true;
-            
-            $this->colorService->createColor($data);
+            $this->colorService->createColor($request->validated());
             return redirect()->route('colors.index')->with('success', 'Thao tác thành công !!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thao tác không thành công !!');
@@ -66,21 +55,10 @@ class ColorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateColorRequest $request, string $id)
+    public function update(ColorRequest $request, string $id)
     {
         try {
-            $data = $request->validated();
-            $color = $this->colorService->findIdColor($id);
-            
-            // Tự động tạo slug nếu không có
-            if (empty($data['slug'])) {
-                $data['slug'] = generateSlug($data['color_name']);
-            }
-            
-            // Set default is_active
-            $data['is_active'] = $data['is_active'] ?? $color->is_active;
-            
-            $this->colorService->updateColor($id, $data);
+            $this->colorService->updateColor($id, $request->validated());
             return redirect()->route('colors.index')->with('success', 'Thao tác thành công !!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thao tác không thành công !!');
