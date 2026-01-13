@@ -30,8 +30,6 @@
                     <form action="{{ route('colors.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
-
-
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="card">
@@ -40,12 +38,24 @@
                                     </div><!-- end card header -->
                                     <div class="card-body">
 
-
+                                        <div class="form-group">
+                                            <label for="color_name">Name <span class="text-danger">*</span></label>
+                                            <input type="text" value="{{ old('color_name') }}" name="color_name"
+                                                id="color_name" class="form-control" required>
+                                        </div>
 
                                         <div class="form-group">
-                                            <label for="color_name">Name</label>
-                                            <input type="text" value="{{ old('color_name') }}" name="color_name"
-                                                id="color_name" class="form-control">
+                                            <label for="slug">Slug</label>
+                                            <input type="text" value="{{ old('slug') }}" name="slug"
+                                                id="slug" class="form-control" placeholder="Để trống để tự động tạo">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="is_active">Status</label>
+                                            <select name="is_active" id="is_active" class="form-control">
+                                                <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>Active</option>
+                                                <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
+                                            </select>
                                         </div>
 
                                     </div>

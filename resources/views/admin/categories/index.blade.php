@@ -30,10 +30,13 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
-                                <th>Created At</th>
-                                <th>Updated At</th>
-                                <th>Action</th>
+                                <th>Tên danh mục</th>
+                                <th>Slug</th>
+                                <th>Hình ảnh</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                                <th>Ngày cập nhật</th>
+                                <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -41,19 +44,28 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->cate_name }}</td>
-                                    
-                                    <td> {{ $item->created_at->format('d/m/Y H:i:s') }} </td>
-                                    <td> {{ $item->updated_at->format('d/m/Y H:i:s') }} </td>
-                                    <td style="width: 130px;display: flex">
-                                        <a class="btn btn-dark mr-2" href="{{ route('categories.edit', $item) }}"
+                                    <td>{{ $item->slug }}</td>
+                                    <td>
+                                        @if($item->cate_image)
+                                            <img src="{{ getImageStorage($item->cate_image) }}" 
+                                                 alt="{{ $item->cate_name }}" 
+                                                 style="max-width: 50px; height: auto;">
+                                        @else
+                                            <span class="text-muted">Không có ảnh</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($item->is_active)
+                                            <span class="badge badge-success">Hoạt động</span>
+                                        @else
+                                            <span class="badge badge-secondary">Không hoạt động</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $item->created_at->format('d/m/Y H:i:s') }}</td>
+                                    <td>{{ $item->updated_at->format('d/m/Y H:i:s') }}</td>
+                                    <td>
+                                        <a class="btn btn-dark" href="{{ route('categories.edit', $item) }}"
                                             role="button">Edit</a>
-                                        <form action="{{ route('categories.destroy', $item) }}" method="post"
-                                            enctype="multipart/form-data">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button onclick="return confirm('Bạn có chắc chắn xóa không !!!')" type="submit" class="btn btn-danger">Delete</button>
-                                        </form>
-
                                     </td>
                                 </tr>
                             @endforeach

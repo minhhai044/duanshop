@@ -25,7 +25,10 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'cate_name' => ['required',Rule::unique(Category::class)]
+            'cate_name' => ['required', 'string', 'max:50', Rule::unique(Category::class)],
+            'cate_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique(Category::class)],
+            'is_active' => ['nullable', 'boolean']
         ];
     }
 }

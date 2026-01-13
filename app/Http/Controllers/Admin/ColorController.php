@@ -5,17 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreColorRequest;
 use App\Http\Requests\Admin\UpdateColorRequest;
-use App\Models\Color;
 use App\Services\ColorService;
-use Illuminate\Http\Request;
-use PhpParser\Node\Stmt\Return_;
 
 class ColorController extends Controller
 {
     protected $colorService;
-    public function __construct(
-        ColorService $colorService
-    ) {
+    public function __construct(ColorService $colorService)
+    {
         $this->colorService = $colorService;
     }
     /**
@@ -41,7 +37,16 @@ class ColorController extends Controller
     public function store(StoreColorRequest $request)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
+            
+            // Tự động tạo slug nếu không có
+            if (empty($data['slug'])) {
+                $data['slug'] = generateSlug($data['color_name']);
+            }
+            
+            // Set default is_active
+            $data['is_active'] = $data['is_active'] ?? true;
+            
             $this->colorService->createColor($data);
             return redirect()->route('colors.index')->with('success', 'Thao tác thành công !!');
         } catch (\Throwable $th) {
@@ -49,9 +54,11 @@ class ColorController extends Controller
         }
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit(string $id)
     {
-
         $data = $this->colorService->findIdColor($id);
         return view('admin.colors.edit', compact('data'));
     }
@@ -62,22 +69,19 @@ class ColorController extends Controller
     public function update(UpdateColorRequest $request, string $id)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
+            $color = $this->colorService->findIdColor($id);
+            
+            // Tự động tạo slug nếu không có
+            if (empty($data['slug'])) {
+                $data['slug'] = generateSlug($data['color_name']);
+            }
+            
+            // Set default is_active
+            $data['is_active'] = $data['is_active'] ?? $color->is_active;
+            
             $this->colorService->updateColor($id, $data);
             return redirect()->route('colors.index')->with('success', 'Thao tác thành công !!');
-        } catch (\Throwable $th) {
-            return back()->with('error', 'Thao tác không thành công !!');
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        try {
-            $this->colorService->deleteColor($id);
-            return back()->with('success', 'Thao tác thành công !!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thao tác không thành công !!');
         }

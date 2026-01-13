@@ -24,7 +24,9 @@ class UpdateColorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'color_name' => ['required',Rule::unique(Color::class)->ignore($this->route('color'))]
+            'color_name' => ['required', 'string', 'max:100', Rule::unique(Color::class)->ignore($this->route('color'))],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique(Color::class)->ignore($this->route('color'))],
+            'is_active' => ['nullable', 'boolean']
         ];
     }
 }

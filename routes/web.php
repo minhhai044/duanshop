@@ -107,21 +107,20 @@ Route::prefix('dashboard')->middleware(['auth', 'isadmin'])->group(function () {
 
     Route::get('/account/restore/{id}', [AdminUserController::class, 'restore'])->name('account.restore');
 
-    Route::get('/account/destroy/{id}',     [AdminUserController::class, 'destroy'])->name('account.destroy');
-
     Route::get('/account/setrole/{id}', [AdminUserController::class, 'setrole'])->name('account.setrole');
 
     Route::get('/account/downgrade/{id}', [AdminUserController::class, 'downgrade'])->name('account.downgrade');
 
-    Route::get('/account/delete/{id}',     [AdminUserController::class, 'delete'])->name('account.delete');
+    Route::get('/account/toggle-status/{id}', [AdminUserController::class, 'toggleStatus'])->name('account.toggleStatus');
 
-    Route::resource('products', ProductController::class);
+    Route::resource('products', ProductController::class)->except(['destroy']);
+    Route::get('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggleStatus');
 
-    Route::resource('capacities', CapacityController::class);
+    Route::resource('capacities', CapacityController::class)->except(['destroy']);
 
-    Route::resource('categories', CategoryController::class);
+    Route::resource('categories', CategoryController::class)->except(['destroy']);
 
-    Route::resource('colors', ColorController::class);
+    Route::resource('colors', ColorController::class)->except(['destroy']);
 
     Route::get('cart',  [AdminCartController::class, 'listcart'])->name('dashboard.cart');
     Route::get('{cart}/cart',  [AdminCartController::class, 'showCart'])->name('cart.show');

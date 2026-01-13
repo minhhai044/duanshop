@@ -24,7 +24,9 @@ class StoteCapacityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cap_name' => ['required',Rule::unique(Capacity::class)]
+            'cap_name' => ['required', 'string', 'max:255', Rule::unique(Capacity::class)],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique(Capacity::class)],
+            'is_active' => ['nullable', 'boolean']
         ];
     }
 }

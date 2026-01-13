@@ -37,7 +37,21 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
+            
+            // Tự động tạo slug nếu không có
+            if (empty($data['slug'])) {
+                $data['slug'] = generateSlug($data['cate_name']);
+            }
+            
+            // Xử lý upload image
+            if ($request->hasFile('cate_image')) {
+                $data['cate_image'] = createImageStorage('categories', $request->file('cate_image'));
+            }
+            
+            // Set default is_active
+            $data['is_active'] = $data['is_active'] ?? true;
+            
             $this->CategoryService->createCategory($data);
             return redirect()->route('categories.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
@@ -59,21 +73,27 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, string $id)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
+            $category = $this->CategoryService->findIdCategory($id);
+            
+            // Tự động tạo slug nếu không có
+            if (empty($data['slug'])) {
+                $data['slug'] = generateSlug($data['cate_name']);
+            }
+            
+            // Xử lý upload image
+            if ($request->hasFile('cate_image')) {
+                // Xóa ảnh cũ nếu có
+                if ($category->cate_image) {
+                    deleteImageStorage($category->cate_image);
+                }
+                $data['cate_image'] = createImageStorage('categories', $request->file('cate_image'));
+            }
+            
+            // Set default is_active
+            $data['is_active'] = $data['is_active'] ?? $category->is_active;
+            
             $this->CategoryService->updateCategory($id, $data);
-            return redirect()->route('categories.index')->with('success', 'Thao tác thành công !!!');
-        } catch (\Throwable $th) {
-            return back()->with('error', 'Thao tác không thành công !!!');
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        try {
-            $this->CategoryService->deleteCategory($id);
             return redirect()->route('categories.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thao tác không thành công !!!');

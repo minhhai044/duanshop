@@ -24,7 +24,9 @@ class UpdateCapacityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cap_name' => ['required',Rule::unique(Capacity::class)->ignore($this->route('capacity'))]
+            'cap_name' => ['required', 'string', 'max:255', Rule::unique(Capacity::class)->ignore($this->route('capacity'))],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique(Capacity::class)->ignore($this->route('capacity'))],
+            'is_active' => ['nullable', 'boolean']
         ];
     }
 }

@@ -11,7 +11,6 @@ use App\Services\CategoryService;
 use App\Services\ColorService;
 use App\Services\GalleryService;
 use App\Services\ProductService;
-use App\Services\TagService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -22,21 +21,18 @@ class ProductController extends Controller
     protected $productService;
     protected $categoryService;
     protected $colorService;
-    protected $tagService;
     protected $capacityService;
     protected $galleryService;
     public function __construct(
         ProductService $productService,
         CategoryService $categoryService,
         ColorService $colorService,
-        TagService $tagService,
         CapacityService $capacityService,
         GalleryService $galleryService
     ) {
         $this->productService = $productService;
         $this->categoryService = $categoryService;
         $this->colorService = $colorService;
-        $this->tagService = $tagService;
         $this->capacityService = $capacityService;
         $this->galleryService = $galleryService;
     }
@@ -54,9 +50,8 @@ class ProductController extends Controller
         $categories =   $this->categoryService->pluckCategory('cate_name', 'id');
         $colors     =   $this->colorService->pluckColor('color_name', 'id');
         $capacities =   $this->capacityService->pluckCapacity('cap_name', 'id');
-        $tags       =   $this->tagService->pluckTag('tag_name', 'id');
 
-        return view('admin.products.create', compact(['categories', 'colors', 'capacities', 'tags']));
+        return view('admin.products.create', compact(['categories', 'colors', 'capacities']));
     }
     /**
      * Store a newly created resource in storage.
@@ -64,56 +59,72 @@ class ProductController extends Controller
     private function ProductLogicRequest($request)
     {
         //dataProduct
-        $dataProduct = $request->except(['product_variants', 'tags', 'image_galleries']);
+        $dataProduct = $request->except(['product_variants', 'image_galleries', 'add_galleries']);
+
+        // Tự động tạo slug nếu không có
+        if (empty($dataProduct['pro_slug'])) {
+            $dataProduct['pro_slug'] = generateSlug($dataProduct['pro_name']);
+        }
+
+        // Set default values and handle null/empty values
+        $dataProduct['pro_featured'] = $dataProduct['pro_featured'] ?? false;
+        $dataProduct['is_hot'] = $dataProduct['is_hot'] ?? false;
+        $dataProduct['is_active'] = $dataProduct['is_active'] ?? true;
+        $dataProduct['pro_views'] = $dataProduct['pro_views'] ?? 0;
+        $dataProduct['pro_prating'] = $dataProduct['pro_prating'] ?? 0;
+        
+        // Handle price_sale - convert empty string to 0
+        $dataProduct['pro_price_sale'] = !empty($dataProduct['pro_price_sale']) ? $dataProduct['pro_price_sale'] : 0;
+        
+        // Ensure price_regular is not empty
+        $dataProduct['pro_price_regular'] = !empty($dataProduct['pro_price_regular']) ? $dataProduct['pro_price_regular'] : 0;
 
         if ($request->hasFile('pro_img_thumbnail')) {
-
-            $dataProduct['pro_img_thumbnail'] = Storage::put('products', $request->file('pro_img_thumbnail'));
+            $dataProduct['pro_img_thumbnail'] = createImageStorage('products', $request->file('pro_img_thumbnail'));
         }
+
         //Variant
         $dataProductVariantsTmp = $request->product_variants;
-
         $dataProductVariants = [];
 
         foreach ($dataProductVariantsTmp as $key => $value) {
-
             $tmp = explode('-', $key);
-            $dataProductVariants[] = [
-                'capacity_id' => $tmp[0],
-                'color_id' => $tmp[1],
-                'quantity' => $value['quantity'],
-            ];
+            
+            // Only create variant if it has meaningful data (quantity > 0 or price > 0)
+            if ((!empty($value['quantity']) && $value['quantity'] > 0) || 
+                (!empty($value['price']) && $value['price'] > 0)) {
+                
+                $dataProductVariants[] = [
+                    'capacity_id' => $tmp[0],
+                    'color_id' => $tmp[1],
+                    'quantity' => $value['quantity'] ?? 0,
+                    'price' => !empty($value['price']) ? $value['price'] : 0,
+                    'price_sale' => !empty($value['price_sale']) ? $value['price_sale'] : 0,
+                ];
+            }
         }
 
         //Galleries
-
         $dataProductGalleriesTmp = $request->image_galleries ?? [];
-
         $dataProductGalleries = [];
 
         foreach ($dataProductGalleriesTmp as $key => $image) {
-
             if (!empty($image)) {
-
-                $dataProductGalleries[$key] = Storage::put('galleries', $image);
+                $dataProductGalleries[$key] = createImageStorage('galleries', $image);
             }
         }
-        // Thêm gallary khi update
-        $dataGalleriesUpdateTmp = $request->add_galleries ?? [];
 
+        // Thêm gallery khi update
+        $dataGalleriesUpdateTmp = $request->add_galleries ?? [];
         $dataGalleriesUpdate = [];
 
         foreach ($dataGalleriesUpdateTmp as $image) {
-
             if (!empty($image)) {
-
-                $dataGalleriesUpdate[] = Storage::put('galleries', $image);
+                $dataGalleriesUpdate[] = createImageStorage('galleries', $image);
             }
         }
-        //Tag
-        $dataProductTags = $request->tags;
-
-        return [$dataProduct, $dataProductVariants, $dataProductTags, $dataProductGalleries, $dataGalleriesUpdate];
+        
+        return [$dataProduct, $dataProductVariants, $dataProductGalleries, $dataGalleriesUpdate];
     }
     public function store(StoreProductRequest $request)
     {
@@ -123,38 +134,33 @@ class ProductController extends Controller
             list(
                 $dataProduct,
                 $dataProductVariants,
-                $dataProductTags,
                 $dataProductGalleries
             ) = $this->ProductLogicRequest($request);
 
-
-            DB::transaction(function () use ($dataProduct, $dataProductVariants, $dataProductGalleries, $dataProductTags) {
-
+            DB::transaction(function () use ($dataProduct, $dataProductVariants, $dataProductGalleries) {
                 $product = $this->productService->createProduct($dataProduct);
 
                 foreach ($dataProductVariants as $item) {
-                    $product->product_variant()->create($item);
+                    $product->productVariants()->create($item);
                 }
 
-                $product->tags()->attach($dataProductTags);
-
                 foreach ($dataProductGalleries as $item) {
-
                     $product->galleries()->create(['image' => $item]);
                 }
                 Cache::forget('products');
             });
+            
             return redirect()
                 ->route('products.index')
                 ->with('success', 'Thao tác thành công!');
         } catch (\Throwable $th) {
-            if (!empty($dataProduct['pro_img_thumbnail']) && Storage::exists($dataProduct['pro_img_thumbnail'])) {
-                Storage::delete($dataProduct['pro_img_thumbnail']);
+            if (!empty($dataProduct['pro_img_thumbnail'])) {
+                deleteImageStorage($dataProduct['pro_img_thumbnail']);
             }
 
             foreach ($dataProductGalleries as $item) {
-                if (!empty($item) && Storage::exists($item)) {
-                    Storage::delete($item);
+                if (!empty($item)) {
+                    deleteImageStorage($item);
                 }
             }
             Log::error(__CLASS__ . '@' . __FUNCTION__, context: [$th->getMessage()]);
@@ -163,23 +169,17 @@ class ProductController extends Controller
     }
     public function edit(string $id)
     {
-        $data       =   $this->productService->findIDRelationProduct($id, ['product_variant']);
+        $data       =   $this->productService->findIDRelationProduct($id, ['productVariants']);
 
         $categories =   $this->categoryService->pluckCategory('cate_name', 'id');
         $colors     =   $this->colorService->pluckColor('color_name', 'id');
         $capacities =   $this->capacityService->pluckCapacity('cap_name', 'id');
-        $tags       =   $this->tagService->pluckTag('tag_name', 'id');
-
-
-        $product_tags = $data->tags->pluck('id')->all();
 
         return view('admin.products.edit', compact(
             'data',
             'categories',
             'colors',
-            'capacities',
-            'tags',
-            'product_tags'
+            'capacities'
         ));
     }
 
@@ -193,64 +193,68 @@ class ProductController extends Controller
             list(
                 $dataProduct,
                 $dataProductVariants,
-                $dataProductTags,
                 $dataProductGalleries,
                 $dataGalleriesUpdate
             ) = $this->ProductLogicRequest($request);
 
-            DB::transaction(function () use ($dataProduct, $dataProductVariants, $dataProductTags, $dataProductGalleries, $id, $dataGalleriesUpdate) {
-
+            DB::transaction(function () use ($dataProduct, $dataProductVariants, $dataProductGalleries, $id, $dataGalleriesUpdate) {
                 $product = $this->productService->findIDProduct($id);
 
-                if (!empty($dataProduct['pro_img_thumbnail']) && Storage::exists($product->pro_img_thumbnail)) {
-                    Storage::delete($product->pro_img_thumbnail);
+                if (!empty($dataProduct['pro_img_thumbnail']) && $product->pro_img_thumbnail) {
+                    deleteImageStorage($product->pro_img_thumbnail);
                 }
 
                 $product->update($dataProduct);
 
-
-
                 foreach ($dataProductVariants as $item) {
-                    ProductVariant::query()->where([
-                        ['product_id', $id],
-                        ['capacity_id', $item['capacity_id']],
-                        ['color_id', $item['color_id']]
-                    ])
-                        ->update(['quantity' => $item['quantity']]);
+                    // Use updateOrCreate to handle the composite unique constraint
+                    ProductVariant::updateOrCreate(
+                        [
+                            'product_id' => $id,
+                            'capacity_id' => $item['capacity_id'],
+                            'color_id' => $item['color_id']
+                        ],
+                        [
+                            'quantity' => $item['quantity'],
+                            'price' => $item['price'],
+                            'price_sale' => $item['price_sale']
+                        ]
+                    );
                 }
 
-                $product->tags()->sync($dataProductTags);
-
-
                 foreach ($dataProductGalleries ?? [] as $key => $image) {
-
                     $gallery = $this->galleryService->findIdGallery($key);
 
-                    if (!empty($image) && Storage::exists($gallery->image)) {
-                        Storage::delete($gallery->image);
+                    if (!empty($image) && $gallery->image) {
+                        deleteImageStorage($gallery->image);
                     }
 
                     $product->galleries()->where('id', $key)->update(['image' => $image]);
                 }
+                
                 if (!empty($dataGalleriesUpdate)) {
                     foreach ($dataGalleriesUpdate ?? [] as $item) {
-
                         $product->galleries()->create(['image' => $item]);
                     }
                 }
                 Cache::forget('products');
-
             });
+            
             return redirect()
                 ->route('products.index')
                 ->with('success', 'Thao tác thành công!');
         } catch (\Throwable $th) {
-            if (!empty($dataProduct['pro_img_thumbnail']) && Storage::exists($dataProduct['pro_img_thumbnail'])) {
-                Storage::delete($dataProduct['pro_img_thumbnail']);
+            if (!empty($dataProduct['pro_img_thumbnail'])) {
+                deleteImageStorage($dataProduct['pro_img_thumbnail']);
             }
             foreach ($dataProductGalleries as $item) {
-                if (!empty($item) && Storage::exists($item)) {
-                    Storage::delete($item);
+                if (!empty($item)) {
+                    deleteImageStorage($item);
+                }
+            }
+            foreach ($dataGalleriesUpdate as $item) {
+                if (!empty($item)) {
+                    deleteImageStorage($item);
                 }
             }
             Log::error(__CLASS__ . '@' . __FUNCTION__, [$th->getMessage()]);
@@ -260,32 +264,18 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Toggle the active status of the specified product.
      */
-    public function destroy(string $id)
+    public function toggleStatus(string $id)
     {
         try {
-            DB::transaction(function () use ($id) {
-
-                $products = $this->productService->findIDProduct($id);
-
-                $products->tags()->sync([]);
-
-                $products->galleries()->delete();
-
-                $products->product_variant()->delete();
-
-                $products->delete();
-
-                foreach ($products->galleries ?? [] as $item) {
-                    if (!empty($item) && Storage::exists($item)) {
-                        Storage::delete($item);
-                    }
-                }
-                Cache::forget('products');
-
-            });
-            return redirect()->route('products.index')->with('success', 'Thao tác thành công!');
+            $product = $this->productService->findIDProduct($id);
+            $product->update(['is_active' => !$product->is_active]);
+            
+            $status = $product->is_active ? 'kích hoạt' : 'vô hiệu hóa';
+            Cache::forget('products');
+            
+            return redirect()->route('products.index')->with('success', "Đã {$status} sản phẩm thành công!");
         } catch (\Throwable $th) {
             return redirect()->route('products.index')->with('error', 'Thao tác không thành công!');
         }

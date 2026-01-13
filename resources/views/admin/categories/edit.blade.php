@@ -41,11 +41,36 @@
                                     </div><!-- end card header -->
                                     <div class="card-body">
 
-
-                                        <div class="form-group">
-                                            <label for="cate_name">Name</label>
+                                        <div class="form-group mb-3">
+                                            <label for="cate_name">Tên danh mục *</label>
                                             <input type="text" value="{{ $data->cate_name }}" name="cate_name"
-                                                id="cate_name" class="form-control">
+                                                id="cate_name" class="form-control" required>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="slug">Slug</label>
+                                            <input type="text" value="{{ $data->slug }}" name="slug"
+                                                id="slug" class="form-control">
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="cate_image">Hình ảnh danh mục</label>
+                                            @if($data->cate_image)
+                                                <div class="mb-2">
+                                                    <img src="{{ getImageStorage($data->cate_image) }}" 
+                                                         alt="Current image" style="max-width: 200px; height: auto;">
+                                                </div>
+                                            @endif
+                                            <input type="file" name="cate_image" id="cate_image" 
+                                                class="form-control" accept="image/*">
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="is_active">Trạng thái</label>
+                                            <select name="is_active" id="is_active" class="form-control">
+                                                <option value="1" {{ $data->is_active == 1 ? 'selected' : '' }}>Hoạt động</option>
+                                                <option value="0" {{ $data->is_active == 0 ? 'selected' : '' }}>Không hoạt động</option>
+                                            </select>
                                         </div>
 
                                     </div>

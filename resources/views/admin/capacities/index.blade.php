@@ -31,6 +31,8 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
+                                <th>Slug</th>
+                                <th>Status</th>
                                 <th>Created At</th>
                                 <th>Updated At</th>
                                 <th>Action</th>
@@ -41,19 +43,17 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->cap_name }}</td>
-                                    
+                                    <td>{{ $item->slug }}</td>
+                                    <td>
+                                        <span class="badge badge-{{ $item->is_active ? 'success' : 'danger' }}">
+                                            {{ $item->is_active ? 'Active' : 'Inactive' }}
+                                        </span>
+                                    </td>
                                     <td> {{ $item->created_at->format('d/m/Y H:i:s') }} </td>
                                     <td> {{ $item->updated_at->format('d/m/Y H:i:s') }} </td>
-                                    <td style="width: 130px;display: flex">
-                                        <a class="btn btn-dark mr-2" href="{{ route('capacities.edit', $item) }}"
+                                    <td>
+                                        <a class="btn btn-dark" href="{{ route('capacities.edit', $item) }}"
                                             role="button">Edit</a>
-                                        <form action="{{ route('capacities.destroy', $item) }}" method="post"
-                                            enctype="multipart/form-data">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button onclick="return confirm('Bạn có chắc chắn xóa không !!!')" type="submit" class="btn btn-danger">Delete</button>
-                                        </form>
-
                                     </td>
                                 </tr>
                             @endforeach

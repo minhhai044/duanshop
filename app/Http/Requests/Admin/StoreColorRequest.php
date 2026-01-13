@@ -24,7 +24,9 @@ class StoreColorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'color_name' => ['required',Rule::unique(Color::class)]
+            'color_name' => ['required', 'string', 'max:100', Rule::unique(Color::class)],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique(Color::class)],
+            'is_active' => ['nullable', 'boolean']
         ];
     }
 }

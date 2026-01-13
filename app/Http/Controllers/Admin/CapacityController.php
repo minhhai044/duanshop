@@ -5,16 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoteCapacityRequest;
 use App\Http\Requests\Admin\UpdateCapacityRequest;
-use App\Models\Capacity;
 use App\Services\CapacityService;
-use Illuminate\Http\Request;
 
 class CapacityController extends Controller
 {
     protected $capacityService;
-    public function __construct(
-        CapacityService $capacityService
-    ) {
+    public function __construct(CapacityService $capacityService)
+    {
         $this->capacityService = $capacityService;
     }
     /**
@@ -40,7 +37,16 @@ class CapacityController extends Controller
     public function store(StoteCapacityRequest $request)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
+            
+            // Tự động tạo slug nếu không có
+            if (empty($data['slug'])) {
+                $data['slug'] = generateSlug($data['cap_name']);
+            }
+            
+            // Set default is_active
+            $data['is_active'] = $data['is_active'] ?? true;
+            
             $this->capacityService->createCapacity($data);
             return redirect()->route('capacities.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
@@ -48,7 +54,9 @@ class CapacityController extends Controller
         }
     }
 
-
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit(string $id)
     {
         $data = $this->capacityService->findIdCapacity($id);
@@ -61,21 +69,18 @@ class CapacityController extends Controller
     public function update(UpdateCapacityRequest $request, string $id)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
+            $capacity = $this->capacityService->findIdCapacity($id);
+            
+            // Tự động tạo slug nếu không có
+            if (empty($data['slug'])) {
+                $data['slug'] = generateSlug($data['cap_name']);
+            }
+            
+            // Set default is_active
+            $data['is_active'] = $data['is_active'] ?? $capacity->is_active;
+            
             $this->capacityService->updateCapacity($id, $data);
-            return redirect()->route('capacities.index')->with('success', 'Thao tác thành công !!!');
-        } catch (\Throwable $th) {
-            return back()->with('error', 'Thao tác không thành công !!!');
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        try {
-            $this->capacityService->deleteCapacity($id);
             return redirect()->route('capacities.index')->with('success', 'Thao tác thành công !!!');
         } catch (\Throwable $th) {
             return back()->with('error', 'Thao tác không thành công !!!');

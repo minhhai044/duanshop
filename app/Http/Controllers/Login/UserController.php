@@ -52,7 +52,7 @@ class UserController extends Controller
             
             // Tự động tạo slug từ name nếu không có
             if (empty($data['slug'])) {
-                $data['slug'] = \Illuminate\Support\Str::slug($data['name']) . '-' . time();
+                $data['slug'] = generateSlug($data['name']);
             }
             
             // Đặt giá trị mặc định

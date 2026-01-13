@@ -30,6 +30,15 @@ class AuthService
 
     public function register(array $data)
     {
+        // Đảm bảo slug được tạo nếu không có
+        if (empty($data['slug'])) {
+            $data['slug'] = generateSlug($data['name']);
+        }
+        
+        // Đặt giá trị mặc định
+        $data['type'] = $data['type'] ?? User::TYPE_MEMBER;
+        $data['is_active'] = $data['is_active'] ?? true;
+        
         $user = User::create($data);
         Auth::login($user);
         return $user;

@@ -24,7 +24,10 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cate_name' => ['required',Rule::unique(Category::class)->ignore($this->route('category'))]
+            'cate_name' => ['required', 'string', 'max:50', Rule::unique(Category::class)->ignore($this->route('category'))],
+            'cate_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique(Category::class)->ignore($this->route('category'))],
+            'is_active' => ['nullable', 'boolean']
         ];
     }
 }

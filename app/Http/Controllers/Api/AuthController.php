@@ -143,12 +143,11 @@ class AuthController extends Controller
 
         if (empty($user)) {
             // Trường hợp chưa có user thì tạo mới
-            $slug = \Illuminate\Support\Str::slug($data['name']) . '-' . time();
             $create_user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => bcrypt($data['password']),
-                'slug' => $slug,
+                'slug' => generateSlug($data['name']),
                 'type' => User::TYPE_MEMBER,
                 'is_active' => false
             ]);
@@ -164,11 +163,10 @@ class AuthController extends Controller
                 return $this->errorResponse([], 'Tài khoản đã được kích hoạt trước đó.', Response::HTTP_BAD_REQUEST);
             }
             // Cập nhật thông tin user
-            $slug = \Illuminate\Support\Str::slug($data['name']) . '-' . time();
             $user->update([
                 'name' => $data['name'],
                 'password' => bcrypt($data['password']),
-                'slug' => $slug
+                'slug' => generateSlug($data['name'])
             ]);
             // Cập nhật hoặc tạo mới OTP
             $user->oneTimePassword()->updateOrCreate(

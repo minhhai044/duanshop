@@ -26,4 +26,11 @@ class CartItem extends Model
     public function productVariant(){
         return $this->belongsTo(ProductVariant::class);
     }
+
+    /**
+     * Get the product through product variant
+     */
+    public function product(){
+        return $this->productVariant->product;
+    }
 }

@@ -44,6 +44,9 @@ class SocialiteController extends Controller
                         'name' => $socialUser->name,
                         'email' => $socialUser->email,
                         'password' => Hash::make(Str::random(20)), // Mật khẩu ngẫu nhiên
+                        'slug' => generateSlug($socialUser->name),
+                        'type' => User::TYPE_MEMBER,
+                        'is_active' => true, // Kích hoạt ngay cho social login
                         'auth_provider_id' => $socialUser->id,
                         'auth_provider' => $provider,
                     ]);

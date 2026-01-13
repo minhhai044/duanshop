@@ -24,67 +24,119 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pro_name' => ['required', 'max:100', Rule::unique(Product::class)],
-            'pro_sku' => ['required', Rule::unique(Product::class)],
-            'pro_description' => 'nullable',
+            'pro_name' => ['required', 'string', 'max:100', Rule::unique(Product::class)],
+            'pro_sku' => ['required', 'string', Rule::unique(Product::class)],
+            'pro_slug' => ['nullable', 'string', 'max:255', Rule::unique(Product::class)],
+            'pro_description' => 'nullable|string',
             'pro_img_thumbnail' => 'nullable|image|max:2048',
-            'pro_price_regular' =>  [
+            'pro_price_regular' => [
                 'required',
-                'numeric',     // Đảm bảo rằng đây là số (bao gồm số thập phân)
-                'min:0',       // Giá trị tối thiểu
-                'max:99999999.99', // Giá trị tối đa, tương ứng với decimal(10,2)
+                'numeric',
+                'min:0',
+                'max:999999999999999', // decimal(15,0)
             ],
-            'pro_price_sale' =>  [
+            'pro_price_sale' => [
                 'nullable',
                 'numeric',
-                'min:0',       // Giá trị tối thiểu
-                'max:99999999.99',
+                'min:0',
+                'max:999999999999999', // decimal(15,0)
             ],
-            'pro_featured' => ['nullable', Rule::in('0', '1')],
-            'pro_views' => 'nullable',
-            'category_id' => 'required',
+            'pro_featured' => ['nullable', 'boolean'],
+            'pro_views' => 'nullable|integer|min:0',
+            'pro_prating' => 'nullable|numeric|min:0|max:10', // decimal(10,1)
+            'is_hot' => ['nullable', 'boolean'],
+            'is_active' => ['nullable', 'boolean'],
+            'category_id' => 'required|exists:categories,id',
 
             'product_variants' => 'required|array',
-            'product_variants.*.quantity' => 'required|integer|min:0',
+            'product_variants.*.quantity' => 'nullable|integer|min:0',
+            'product_variants.*.price' => 'required|integer|min:0',
+            'product_variants.*.price_sale' => 'nullable|integer|min:0',
 
-            'tags' => 'required|array',
-            'tags.*' => 'required|integer',
-
-            'image_galleries'     => 'required|array',
-            'image_galleries.*'   => 'required|image',
+            'image_galleries' => 'required|array',
+            'image_galleries.*' => 'required|image|max:2048',
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation()
+    {
+        // Convert empty strings to null for nullable fields
+        $input = $this->all();
+        
+        if (isset($input['pro_price_sale']) && $input['pro_price_sale'] === '') {
+            $input['pro_price_sale'] = null;
+        }
+        
+        if (isset($input['pro_prating']) && $input['pro_prating'] === '') {
+            $input['pro_prating'] = null;
+        }
+        
+        if (isset($input['pro_views']) && $input['pro_views'] === '') {
+            $input['pro_views'] = null;
+        }
+
+        // Handle product variants
+        if (isset($input['product_variants'])) {
+            foreach ($input['product_variants'] as $key => $variant) {
+                if (isset($variant['quantity']) && $variant['quantity'] === '') {
+                    $input['product_variants'][$key]['quantity'] = null;
+                }
+                if (isset($variant['price_sale']) && $variant['price_sale'] === '') {
+                    $input['product_variants'][$key]['price_sale'] = null;
+                }
+            }
+        }
+        
+        $this->replace($input);
     }
     public function messages()
     {
         return [
-            'pro_name.required' => "Vui lòng nhập Name",
-            'pro_name.unique' => "Name đã tồn tại",
+            'pro_name.required' => "Vui lòng nhập tên sản phẩm",
+            'pro_name.unique' => "Tên sản phẩm đã tồn tại",
+            'pro_name.max' => "Tên sản phẩm không được vượt quá 100 ký tự",
 
-            'pro_sku.required' => "Vui lòng nhập Sku",
-            'pro_sku.unique' => "Sku đã tồn tại",
+            'pro_sku.required' => "Vui lòng nhập mã SKU",
+            'pro_sku.unique' => "Mã SKU đã tồn tại",
 
-            'pro_img_thumbnail.image' => "Vui lòng chọn lại Image",
-            'pro_img_thumbnail.max' => "Image không được vượt quá 2MB",
+            'pro_slug.unique' => "Slug đã tồn tại",
+            'pro_slug.max' => "Slug không được vượt quá 255 ký tự",
 
-            'pro_price_regular.required' => "Vui lòng nhập Price Regular",
-            'pro_price_regular.numeric' => "Vui lòng nhập Price numeric",
-            'pro_price_regular.min' => "Price numeric phải lớn hơn 0",
-            'pro_price_regular.max' => "Price numeric quá lớn",
+            'pro_img_thumbnail.image' => "Vui lòng chọn file hình ảnh",
+            'pro_img_thumbnail.max' => "Hình ảnh không được vượt quá 2MB",
 
-            'pro_price_sale.numeric' => "Vui lòng nhập Price numeric",
-            'pro_price_sale.min' => "Price numeric phải lớn hơn 0",
-            'pro_price_sale.max' => "Price numeric quá lớn",
+            'pro_price_regular.required' => "Vui lòng nhập giá gốc",
+            'pro_price_regular.numeric' => "Giá gốc phải là số",
+            'pro_price_regular.min' => "Giá gốc phải lớn hơn hoặc bằng 0",
+            'pro_price_regular.max' => "Giá gốc quá lớn",
 
-            'category_id'  => "Vui lòng chọn Category",
+            'pro_price_sale.numeric' => "Giá khuyến mãi phải là số",
+            'pro_price_sale.min' => "Giá khuyến mãi phải lớn hơn hoặc bằng 0",
+            'pro_price_sale.max' => "Giá khuyến mãi quá lớn",
 
-            'product_variants.*.quantity.required' => "Vui lòng nhập Quantity cho biến thể",
-            'product_variants.*.quantity.integer' => "Vui lòng không để số 0 đầu tiên trong Quantity",
-            'product_variants.*.quantity.min' => "Quantity phải lớn hơn hoặc bằng 0",
+            'pro_prating.numeric' => "Đánh giá phải là số",
+            'pro_prating.min' => "Đánh giá phải từ 0",
+            'pro_prating.max' => "Đánh giá không được vượt quá 10",
 
-            'tags.required' => "Vui lòng chọn Tag",
+            'category_id.required' => "Vui lòng chọn danh mục",
+            'category_id.exists' => "Danh mục không tồn tại",
 
-            'image_galleries.required' => "Vui lòng chọn Gallery Image",
-            'image_galleries.image' => "Vui lòng chọn lại Gallery phải là Image",
+            'product_variants.required' => "Vui lòng thêm ít nhất một biến thể",
+            'product_variants.*.quantity.required' => "Vui lòng nhập số lượng cho biến thể",
+            'product_variants.*.quantity.integer' => "Số lượng phải là số nguyên",
+            'product_variants.*.quantity.min' => "Số lượng phải lớn hơn hoặc bằng 0",
+            'product_variants.*.price.required' => "Vui lòng nhập giá cho biến thể",
+            'product_variants.*.price.integer' => "Giá phải là số nguyên",
+            'product_variants.*.price.min' => "Giá phải lớn hơn hoặc bằng 0",
+            'product_variants.*.price_sale.integer' => "Giá khuyến mãi phải là số nguyên",
+            'product_variants.*.price_sale.min' => "Giá khuyến mãi phải lớn hơn hoặc bằng 0",
+
+            'image_galleries.required' => "Vui lòng chọn ít nhất một hình ảnh gallery",
+            'image_galleries.*.image' => "File phải là hình ảnh",
+            'image_galleries.*.max' => "Hình ảnh không được vượt quá 2MB",
         ];
     }
 }
