@@ -10,10 +10,18 @@ class Color extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
-        'color_name',   
+        'color_name',
+        'slug',
+        'is_active'
     ];
-    public function capacities(){
-        return $this->belongsToMany(Capacity::class);
+
+    protected $casts = [
+        'is_active' => 'boolean'
+    ];
+
+    public function productVariants()
+    {
+        return $this->hasMany(ProductVariant::class);
     }
     
 }

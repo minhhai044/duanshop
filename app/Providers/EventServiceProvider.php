@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\OtpGenerated;
 use App\Events\SendMailOrderEvent;
 use App\Listeners\SendMailOrderEventNotification;
+use App\Listeners\SendOtpNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,7 +24,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         SendMailOrderEvent::class => [
             SendMailOrderEventNotification::class
-        ]
+        ],
+        OtpGenerated::class => [
+            SendOtpNotification::class,
+        ],
     ];
 
     /**

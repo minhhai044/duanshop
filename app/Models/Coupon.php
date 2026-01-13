@@ -17,7 +17,17 @@ class Coupon extends Model
         'coupon_limit',
         'coupon_used',
         'coupon_status',
-        'coupon_description',
+        'coupon_description'
+    ];
+
+    protected $casts = [
+        'discount_type' => 'boolean',
+        'discount_value' => 'float',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'coupon_limit' => 'integer',
+        'coupon_used' => 'integer',
+        'coupon_status' => 'boolean'
     ];
     public function products(){
         return $this->belongsToMany(Product::class,'product_coupon');

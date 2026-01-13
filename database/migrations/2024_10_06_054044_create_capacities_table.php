@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('capacities', function (Blueprint $table) {
             $table->id();
             $table->string('cap_name');
+            $table->string('slug')->unique();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

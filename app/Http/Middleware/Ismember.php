@@ -16,6 +16,7 @@ class Ismember
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        $user = Auth::user();
+        return ($user && $user->isMember()) ? $next($request) : abort(403);
     }
 }

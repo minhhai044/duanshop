@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('product_name');
             $table->string('product_sku');
             $table->string('product_img_thumbnail')->nullable();
-            $table->decimal('pro_price_regular', 10, 2);
-            $table->decimal('pro_price_sale', 10, 2)->nullable();
+            $table->decimal('pro_price_regular', 20, 2);
+            $table->decimal('pro_price_sale', 20, 2)->nullable();
 
             // Sao lưu thông tin biến thể
             $table->string('variant_capacity_name');

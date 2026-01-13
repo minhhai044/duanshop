@@ -9,6 +9,7 @@ class VnpayPayment extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'order_id',
         'vnp_Amount',
         'vnp_BankCode',
         'vnp_BankTranNo',
@@ -18,7 +19,11 @@ class VnpayPayment extends Model
         'vnp_TransactionNo',
         'vnp_TransactionStatus',
         'vnp_TxnRef',
-        'vnp_SecureHash',
-        'order_id'
+        'vnp_SecureHash'
     ];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }

@@ -11,5 +11,16 @@ class Capacity extends Model
     use HasFactory,SoftDeletes;
     protected $fillable = [
         'cap_name',
+        'slug',
+        'is_active'
     ];
+
+    protected $casts = [
+        'is_active' => 'boolean'
+    ];
+
+    public function productVariants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }

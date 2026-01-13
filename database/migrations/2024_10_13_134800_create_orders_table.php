@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             //Thông tin của users
             $table->foreignIdFor(User::class)->constrained();
-
+            $table->string('order_sku', 50)->unique();
             //Thông tin người nhận hàng
             $table->string('order_user_name');
             $table->string('order_user_email');
@@ -32,7 +32,7 @@ return new class extends Migration
             //Trạng thái thanh toán
             $table->string('status_payment')->default(STATUS_PAYMENT_UNPAID);
             //Tổng giá đơn hàng
-            $table->decimal('order_total_price',15,2);
+            $table->decimal('order_total_price', 15, 2);
 
             $table->timestamps();
         });

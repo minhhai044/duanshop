@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('slug', 50)->unique();
             $table->string('password');
             $table->rememberToken();
             $table->string('type', 20)->default(User::TYPE_MEMBER);
@@ -25,8 +26,11 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->boolean('gender')->default(0)->comment("0 : Nam , 1 : Nữ");
             $table->date('birthday')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(0);
+            $table->string('auth_provider')->nullable();
+            $table->string('auth_provider_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

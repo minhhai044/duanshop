@@ -30,6 +30,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
+        'order_sku',
         'order_user_name',
         'order_user_email',
         'order_user_phone',
@@ -38,8 +39,11 @@ class Order extends Model
         'status_order',
         'method_payment',
         'status_payment',
-        'order_total_price',
-        'order_sku',
+        'order_total_price'
+    ];
+
+    protected $casts = [
+        'order_total_price' => 'decimal:2'
     ];
     public function orderItems()
     {
@@ -48,5 +52,10 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    
+    public function vnpayPayment()
+    {
+        return $this->hasOne(VnpayPayment::class);
     }
 }

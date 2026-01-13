@@ -12,7 +12,15 @@ class ProductVariant extends Model
         'product_id',
         'color_id',
         'capacity_id',
-        'quantity'
+        'quantity',
+        'price',
+        'price_sale'
+    ];
+
+    protected $casts = [
+        'quantity' => 'integer',
+        'price' => 'integer',
+        'price_sale' => 'integer'
     ];
     public function capacity()
     {
@@ -28,5 +36,9 @@ class ProductVariant extends Model
     }
     public function cartitem(){
         return $this->hasMany(CartItem::class);
+    }
+    
+    public function orderItems(){
+        return $this->hasMany(OrderItem::class);
     }
 }

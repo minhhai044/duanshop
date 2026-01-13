@@ -8,10 +8,8 @@ use App\Http\Requests\PostUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -50,7 +48,18 @@ class UserController extends Controller
     public function register(PostRegisterUserRequest $request)
     {
         try {
-            $user = User::query()->create($request->all());
+            $data = $request->validated();
+            
+            // Tự động tạo slug từ name nếu không có
+            if (empty($data['slug'])) {
+                $data['slug'] = \Illuminate\Support\Str::slug($data['name']) . '-' . time();
+            }
+            
+            // Đặt giá trị mặc định
+            $data['type'] = $data['type'] ?? User::TYPE_MEMBER;
+            $data['is_active'] = $data['is_active'] ?? true;
+            
+            $user = User::query()->create($data);
             Auth::login($user);
             request()->session()->regenerate();
             return redirect()->route('index');
