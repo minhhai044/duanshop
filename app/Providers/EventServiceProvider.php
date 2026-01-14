@@ -3,13 +3,16 @@
 namespace App\Providers;
 
 use App\Events\OtpGenerated;
+use App\Events\PasswordGenerated;
 use App\Events\SendMailOrderEvent;
 use App\Listeners\SendMailOrderEventNotification;
 use App\Listeners\SendOtpNotification;
+use App\Listeners\SendPasswordNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Password;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,6 +30,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         OtpGenerated::class => [
             SendOtpNotification::class,
+        ],
+        PasswordGenerated::class => [
+            SendPasswordNotification::class,
         ],
     ];
 

@@ -16,3 +16,6 @@ Stack trace:
 [14-Jan-2026 02:26:04 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
 [14-Jan-2026 02:33:34 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
 [14-Jan-2026 02:41:00 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
+[14-Jan-2026 09:10:39 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
+[14-Jan-2026 16:11:11 Asia/Ho_Chi_Minh] PHP Fatal error:  Cannot redeclare class App\Mail\OtpMail (previously declared in /home/huynhdz2006/public_html/duanshop/app/Mail/OtpMail.php:14) in /home/huynhdz2006/public_html/duanshop/app/Mail/PasswordMail.php on line 14
+[14-Jan-2026 09:12:20 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0

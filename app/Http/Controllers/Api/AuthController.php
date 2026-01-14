@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\OtpGenerated;
+use App\Events\PasswordGenerated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
@@ -187,5 +188,79 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
         ], 'OTP đã được gửi đến email của bạn.');
+    }
+
+
+    public function forgotPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Email không hợp lệ.', Response::HTTP_BAD_REQUEST);
+        }
+
+        $email = $request->input('email');
+        $user = User::query()->where('email', $email)->first();
+
+        if (!$user) {
+            return $this->errorResponse('Email không tồn tại.', Response::HTTP_NOT_FOUND);
+        }
+
+        // Tạo OTP mới
+        $otp = rand(100000, 999999);
+        $user->oneTimePassword()->updateOrCreate(
+            [
+                'user_id' => $user->id,
+            ],
+            [
+                'otp' => $otp,
+                'expires_at' => now()->addMinutes(1),
+            ]
+        );
+
+        broadcast(new OtpGenerated($otp, $email));
+        return $this->successResponse([
+            'email' => $email,
+            'slug' => $user->slug,
+        ], 'OTP đã được gửi đến email của bạn.');
+    }
+
+    public function resetPassword(Request $request)
+    {
+
+        /**
+         * slug : Slug của người dùng
+         * otp : Mã OTP mà người dùng nhập vào
+         */
+        try {
+
+            $user = User::with(['oneTimePassword'])->where('slug', $request->slug)->first();
+            if (!$user) {
+                return $this->errorResponse('Người dùng không tồn tại.', Response::HTTP_NOT_FOUND);
+            }
+            if ($user && $user->oneTimePassword) {
+                $otpRecord = $user->oneTimePassword;
+                if ($otpRecord->otp !== $request->otp) {
+                    return $this->errorResponse('Mã OTP không đúng.', Response::HTTP_BAD_REQUEST);
+                }
+                if ($otpRecord->expires_at < now()) {
+                    return $this->errorResponse('Mã OTP đã hết hạn.', Response::HTTP_BAD_REQUEST);
+                }
+            } else {
+                return $this->errorResponse('Mã OTP không hợp lệ.', Response::HTTP_BAD_REQUEST);
+            }
+            // Kích hoạt tài khoản
+            $passsword = rand(10000000, 99999999);
+            $user->password = bcrypt($passsword);
+            $user->save();
+            broadcast(new PasswordGenerated($passsword, $user->email));
+
+            return $this->successResponse([], 'Mật khẩu đã được đặt lại thành công.', Response::HTTP_CREATED);
+        } catch (\Throwable $th) {
+            Log::error('Registration error: ' . $th->getMessage());
+            return $this->errorResponse('Đăng ký thất bại', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
