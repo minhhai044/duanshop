@@ -16,12 +16,13 @@ return new class extends Migration
     {
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Product::class)->unique()->constrained();
+            $table->foreignIdFor(Product::class)->constrained();
             $table->foreignIdFor(Color::class)->constrained();
             $table->foreignIdFor(Capacity::class)->constrained();
             $table->unsignedInteger('quantity')->default(0);
             $table->unsignedInteger('price')->default(0);
             $table->unsignedInteger('price_sale')->default(0);
+            $table->unique(['product_id', 'color_id', 'capacity_id'], 'product_variants_unique_combination');
             $table->timestamps();
         });
     }

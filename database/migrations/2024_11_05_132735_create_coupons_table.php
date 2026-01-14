@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('coupon_code')->unique()->comment('mã giảm giá');
             $table->boolean('discount_type')->default(0)->comment('0:% , 1:cố định');
             $table->float('discount_value')->default(0)->comment('tỉ lệ % or mức giá');
-            $table->timestamp('start_date')->comment('ngày bắt đầu');
-            $table->timestamp('end_date')->comment('ngày kết thúc');
+            $table->timestamp('start_date')->default(now())->comment('ngày bắt đầu');
+            $table->timestamp('end_date')->default(now())->comment('ngày kết thúc');
             $table->integer('coupon_limit')->default(0)->comment('giới hạn số lượng');
             $table->integer('coupon_used')->default(0)->comment('số lần đã sử dụng');
             $table->boolean('coupon_status')->default(1)->comment('trạng thái');
