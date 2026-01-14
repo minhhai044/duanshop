@@ -59,12 +59,12 @@ class AuthController extends Controller
     {
 
         /**
-         * user_id
+         * slug : Slug của người dùng
          * otp : Mã OTP mà người dùng nhập vào
          */
         try {
 
-            $user = User::with(['oneTimePassword'])->find($request->user_id);
+            $user = User::with(['oneTimePassword'])->where('slug', $request->slug)->first();
             if (!$user) {
                 return $this->errorResponse('Người dùng không tồn tại.', Response::HTTP_NOT_FOUND);
             }
@@ -160,7 +160,7 @@ class AuthController extends Controller
             // Trường hợp đã có user thì cập nhật lại thông tin và OTP 
             // Kiểm tra nếu user đã kích hoạt thì không cho phép gửi OTP
             if ($user->is_active) {
-                return $this->errorResponse([], 'Tài khoản đã được kích hoạt trước đó.', Response::HTTP_BAD_REQUEST);
+                return $this->errorResponse('Tài khoản đã được kích hoạt trước đó.', Response::HTTP_BAD_REQUEST);
             }
             // Cập nhật thông tin user
             $user->update([
@@ -181,6 +181,11 @@ class AuthController extends Controller
         }
 
         broadcast(new OtpGenerated($otp, $data['email']));
-        return $this->successResponse([], 'OTP đã được gửi đến email của bạn.');
+        return $this->successResponse([
+            'slug' => $user ? $user->slug : $create_user->slug,
+            'user_id' => $user ? $user->id : $create_user->id,
+            'name' => $data['name'],
+            'email' => $data['email'],
+        ], 'OTP đã được gửi đến email của bạn.');
     }
 }
