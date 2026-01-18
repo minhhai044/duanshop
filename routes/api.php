@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\SearchProductController;
 use App\Http\Controllers\Api\UserController;
@@ -31,14 +33,26 @@ Route::controller(AuthController::class)
         Route::post('/verify-otp', 'verifyOtp');
         Route::post('/forgot-password', 'forgotPassword');
         Route::post('/reset-password', 'resetPassword');
+        Route::post('/resend-otp', 'resendOtp');
     });
 
-Route::controller(AuthController::class)
-    ->prefix('auths')
-    ->middleware(['auth:sanctum'])
-    ->group(function () {
 
-        Route::post('/logout', 'logout');
+
+Route::controller(CategoryController::class)
+    ->prefix('categories')
+    ->middleware([])
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::get('{category}/', 'show');
+    });
+
+
+Route::controller(ProductController::class)
+    ->prefix('products')
+    ->middleware([])
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::get('{product}/', 'show');
     });
 
 
@@ -51,5 +65,12 @@ Route::middleware('auth:sanctum')->group(function () {
             // Route::get('/', 'index');
             // Route::get('{users}/', 'find');
             // Route::post('/', 'store');
+        });
+
+    Route::controller(AuthController::class)
+        ->prefix('auths')
+        ->group(function () {
+
+            Route::post('/logout', 'logout');
         });
 });

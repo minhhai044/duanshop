@@ -263,4 +263,67 @@ class AuthController extends Controller
             return $this->errorResponse('Đăng ký thất bại', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
+
+    public function resendOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'slug' => ['required', 'string', 'exists:users,slug'],
+            'key'  => ['required', 'in:register,forgot_password'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Dữ liệu không hợp lệ.',
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
+
+        $user = User::query()->where('slug', $request->slug)->first();
+        if (!$user) {
+            return $this->errorResponse('Người dùng không tồn tại.', Response::HTTP_NOT_FOUND);
+        }
+
+        // Rule theo key
+        if ($request->key === 'register') {
+            if ($user->is_active) {
+                return $this->errorResponse('Tài khoản đã được kích hoạt trước đó.', Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        if ($request->key === 'forgot_password') {
+            if (!$user->is_active) {
+                return $this->errorResponse('Tài khoản chưa được kích hoạt nên không thể lấy lại mật khẩu.', Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        // Rate limit resend (vd 30 giây) 
+        $otpRow = $user->oneTimePassword()->first();
+        if ($otpRow && $otpRow->updated_at && $otpRow->updated_at->gt(now()->subSeconds(30))) {
+            return $this->errorResponse('Vui lòng chờ 30 giây rồi thử gửi lại OTP.', Response::HTTP_TOO_MANY_REQUESTS);
+        }
+
+        $otp = rand(100000, 999999);
+
+        // Update/Insert OTP (1 record/user)
+        $user->oneTimePassword()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'otp' => $otp,
+                'expires_at' => now()->addMinutes(1),
+            ]
+        );
+
+        // Gửi OTP (dùng chung event của bạn)
+        broadcast(new OtpGenerated($otp, $user->email));
+
+        return $this->successResponse([
+            'slug' => $user->slug,
+            'email' => $user->email,
+            'key' => $request->key,
+        ], 'OTP đã được gửi lại.');
+    }
 }

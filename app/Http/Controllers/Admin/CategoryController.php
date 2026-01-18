@@ -47,7 +47,7 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        $data = $this->CategoryService->findIdCategory($id);
+        $data = $this->CategoryService->findIdSlugCategory($id);
         return view('admin.categories.edit', compact('data'));
     }
 

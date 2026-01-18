@@ -17,9 +17,41 @@ class ProductService
     /**
      * Get all products with relations
      */
-    public function getProduct($relations = [])
+    public function getAllProduct($paginate = 0, $filters = [], $relation = [], $is_active = false)
     {
-        return Product::with($relations)->orderBy('created_at', 'desc')->get();
+        $query = Product::with($relation)->latest('id');
+
+        $dateRangeable = ['page'];
+
+        // Áp dụng các bộ lọc nếu có
+        foreach ($filters as $field => $value) {
+
+
+            if (isset($value) && $value !== '' && !in_array($field, $dateRangeable, true)) {
+                $query->where($field, 'like', '%' . $value . '%');
+            }
+
+
+            if (isset($value) && $value !== '' && in_array($field, $dateRangeable, true)) {
+                if ($field === 'created_at_start') {
+                    $query->whereDate('created_at', '>=', $value);
+                } elseif ($field === 'created_at_end') {
+                    $query->whereDate('created_at', '<=', $value);
+                }
+            }
+        }
+
+        // Nếu có is_active thì sẽ lọc những user đang kích hoạt
+        if ($is_active) {
+            $query->where('is_active', 1);
+        }
+
+        // Nếu có paginate sẽ thực hiện phân trang
+        if ($paginate > 0) {
+            return $query->paginate($paginate);
+        } else {
+            return $query->get();
+        }
     }
 
     /**
@@ -209,7 +241,7 @@ class ProductService
 
                 $product->galleries()->where('id', $key)->update(['image' => $image]);
             }
-            
+
             // Add new galleries
             if (!empty($dataGalleriesUpdate)) {
                 foreach ($dataGalleriesUpdate as $item) {
@@ -254,10 +286,11 @@ class ProductService
 
         foreach ($dataProductVariantsTmp as $key => $value) {
             $tmp = explode('-', $key);
-            
-            if ((!empty($value['quantity']) && $value['quantity'] > 0) || 
-                (!empty($value['price']) && $value['price'] > 0)) {
-                
+
+            if ((!empty($value['quantity']) && $value['quantity'] > 0) ||
+                (!empty($value['price']) && $value['price'] > 0)
+            ) {
+
                 $dataProductVariants[] = [
                     'capacity_id' => $tmp[0],
                     'color_id' => $tmp[1],
@@ -288,7 +321,7 @@ class ProductService
                 }
             }
         }
-        
+
         return [$dataProduct, $dataProductVariants, $dataProductGalleries, $dataGalleriesUpdate];
     }
 }
