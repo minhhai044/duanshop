@@ -24,7 +24,7 @@ class CategoryController extends Controller
 
     public function show(string $slug)
     {
-        $category = $this->categoryService->findIdSlugCategory('', $slug, ['products'], 8);
+        $category = $this->categoryService->findIdSlugCategory('', $slug, ['products'], 4);
         return $this->successResponse($category, 'Thao tác thành công.');
     }
 }

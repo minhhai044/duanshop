@@ -40,7 +40,9 @@ class ColorRequest extends FormRequest
         return [
             'color_name' => ['required', 'string', 'max:100', Rule::unique(Color::class)],
             'slug' => ['nullable', 'string', 'max:255', Rule::unique(Color::class)],
-            'is_active' => ['nullable', 'boolean']
+            'is_active' => ['nullable', 'boolean'],
+            'color_code' => ['nullable', 'string', 'max:7', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'color_text' => ['nullable', 'string', 'max:7', 'regex:/^#[0-9A-Fa-f]{6}$/']
         ];
     }
 
@@ -50,7 +52,9 @@ class ColorRequest extends FormRequest
         return [
             'color_name' => ['required', 'string', 'max:100', Rule::unique(Color::class)->ignore($id)],
             'slug' => ['nullable', 'string', 'max:255', Rule::unique(Color::class)->ignore($id)],
-            'is_active' => ['nullable', 'boolean']
+            'is_active' => ['nullable', 'boolean'],
+            'color_code' => ['nullable', 'string', 'max:7', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'color_text' => ['nullable', 'string', 'max:7', 'regex:/^#[0-9A-Fa-f]{6}$/']
         ];
     }
 
@@ -62,6 +66,10 @@ class ColorRequest extends FormRequest
             'color_name.max' => 'Tên màu sắc không được vượt quá 100 ký tự.',
             'slug.unique' => 'Slug đã tồn tại.',
             'slug.max' => 'Slug không được vượt quá 255 ký tự.',
+            'color_code.regex' => 'Mã màu phải có định dạng hex hợp lệ (ví dụ: #ffffff).',
+            'color_code.max' => 'Mã màu không được vượt quá 7 ký tự.',
+            'color_text.regex' => 'Màu chữ phải có định dạng hex hợp lệ (ví dụ: #000000).',
+            'color_text.max' => 'Màu chữ không được vượt quá 7 ký tự.',
         ];
     }
 }

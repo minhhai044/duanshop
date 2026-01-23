@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('search', [SearchProductController::class, 'search']);
+// Route::get('search', [SearchProductController::class, 'search']);
 
 Route::controller(AuthController::class)
     ->prefix('auths')
@@ -52,7 +52,8 @@ Route::controller(ProductController::class)
     ->middleware([])
     ->group(function () {
         Route::get('/', 'index');
-        Route::get('{product}/', 'show');
+        Route::get('/search', 'productSearch');
+        Route::get('/{product}', 'show');
     });
 
 

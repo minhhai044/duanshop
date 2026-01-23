@@ -30,11 +30,35 @@ class ColorFactory extends Factory
             'Nâu', 'Bạc', 'Vàng gold', 'Xanh navy', 'Xanh mint', 'Đỏ đô', 'Tím lavender'
         ]);
         
+        $colorCode = $this->faker->hexColor();
+        
         return [
             'color_name' => $colorName,
             'slug' => Str::slug($colorName),
             'is_active' => $this->faker->boolean(80), // 80% chance of being active
+            'color_code' => $colorCode,
+            'color_text' => $this->getContrastColor($colorCode), // Auto-generate contrasting text color
         ];
+    }
+
+    /**
+     * Generate a contrasting text color based on background color
+     */
+    private function getContrastColor(string $hexColor): string
+    {
+        // Remove # if present
+        $hex = ltrim($hexColor, '#');
+        
+        // Convert to RGB
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+        
+        // Calculate luminance
+        $luminance = (0.299 * $r + 0.587 * $g + 0.114 * $b) / 255;
+        
+        // Return black for light backgrounds, white for dark backgrounds
+        return $luminance > 0.5 ? '#000000' : '#ffffff';
     }
 
     /**

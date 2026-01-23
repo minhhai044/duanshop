@@ -11,7 +11,9 @@ class Color extends Model
     protected $fillable = [
         'color_name',
         'slug',
-        'is_active'
+        'is_active',
+        'color_code',
+        'color_text'
     ];
 
     protected $casts = [
@@ -22,5 +24,4 @@ class Color extends Model
     {
         return $this->hasMany(ProductVariant::class);
     }
-    
 }

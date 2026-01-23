@@ -35,7 +35,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Cache::rememberForever('products',function (){
-            return $this->productService->getProduct(['category']);
+            return $this->productService->getAllProduct(0, [],['category'],true);
         });
 
         return view('admin.products.index', compact('products'));
@@ -67,7 +67,7 @@ class ProductController extends Controller
     }
     public function edit(string $id)
     {
-        $data       =   $this->productService->findIDRelationProduct($id, ['productVariants']);
+        $data       =   $this->productService->findProduct($id,null, ['productVariants']);
 
         $categories =   $this->categoryService->pluckCategory('cate_name', 'id');
         $colors     =   $this->colorService->pluckColor('color_name', 'id');

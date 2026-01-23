@@ -32,6 +32,9 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Slug</th>
+                                <th>Color Preview</th>
+                                <th>Color Code</th>
+                                <th>Text Color</th>
                                 <th>Status</th>
                                 <th>Created At</th>
                                 <th>Updated At</th>
@@ -44,6 +47,21 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->color_name }}</td>
                                     <td>{{ $item->slug }}</td>
+                                    <td>
+                                        <div style="background-color: {{ $item->color_code }}; color: {{ $item->color_text }}; padding: 8px 12px; border-radius: 4px; text-align: center; font-weight: bold; min-width: 80px;">
+                                            {{ $item->color_name }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span style="background-color: {{ $item->color_code }}; color: white; padding: 2px 6px; border-radius: 3px; font-family: monospace;">
+                                            {{ $item->color_code }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span style="background-color: {{ $item->color_text }}; color: white; padding: 2px 6px; border-radius: 3px; font-family: monospace;">
+                                            {{ $item->color_text }}
+                                        </span>
+                                    </td>
                                     <td>
                                         <span class="badge badge-{{ $item->is_active ? 'success' : 'danger' }}">
                                             {{ $item->is_active ? 'Active' : 'Inactive' }}

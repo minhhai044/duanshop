@@ -78,18 +78,16 @@ class ProductService
     /**
      * Find product by ID with relations
      */
-    public function findIDRelationProduct($id, $relations = [])
+    public function findProduct($id, $slug, $relations = [])
     {
-        return Product::with($relations)->findOrFail($id);
+        if (!empty($id)) {
+            return Product::with($relations)->findOrFail($id);
+        } elseif (!empty($slug)) {
+            return Product::with($relations)->where('pro_slug', $slug)->firstOrFail();
+        }
+        return null;
     }
 
-    /**
-     * Find product by ID
-     */
-    public function findIDProduct($id)
-    {
-        return Product::findOrFail($id);
-    }
 
     /**
      * Paginate products
@@ -164,7 +162,7 @@ class ProductService
             $products->where('is_active', $filters['is_active']);
         }
 
-        return $products->with(['category'])->get();
+        return $products->with(['category'])->paginate(4);
     }
 
     /**
@@ -206,7 +204,7 @@ class ProductService
         ) = $this->processProductRequest($data, $request, true);
 
         return DB::transaction(function () use ($id, $dataProduct, $dataProductVariants, $dataProductGalleries, $dataGalleriesUpdate) {
-            $product = $this->findIDProduct($id);
+            $product = $this->findProduct($id, null, []);
 
             // Delete old thumbnail if new one is uploaded
             if (!empty($dataProduct['pro_img_thumbnail']) && $product->pro_img_thumbnail) {

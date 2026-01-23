@@ -20,8 +20,15 @@ class ProductController extends Controller
         $products = $this->productService->getAllProduct(4, $request->all(), [], true);
         return $this->successResponse($products, 'Lấy danh sách sản phẩm thành công', 200);
     }
-    public function show($id)
+
+    public function productSearch(Request $request)
     {
-        //
+        $products = $this->productService->searchProducts($request->keyword ?? '');
+        return $this->successResponse($products, 'Tìm kiếm sản phẩm thành công', 200);
+    }
+
+    public function show(string $slug){
+        $product = $this->productService->findProduct(null, $slug, ['category', 'productVariants.color', 'productVariants.capacity', 'galleries']);
+        return $this->successResponse($product, 'Lấy chi tiết sản phẩm thành công', 200);
     }
 }

@@ -51,6 +51,27 @@
                                         </div>
 
                                         <div class="form-group">
+                                            <label for="color_code">Mã màu (Color Code)</label>
+                                            <input type="color" value="{{ old('color_code', '#ffffff') }}" name="color_code"
+                                                id="color_code" class="form-control" style="height: 50px;">
+                                            <small class="form-text text-muted">Chọn màu nền cho màu sắc này</small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="color_text">Màu chữ (Text Color)</label>
+                                            <input type="color" value="{{ old('color_text', '#000000') }}" name="color_text"
+                                                id="color_text" class="form-control" style="height: 50px;">
+                                            <small class="form-text text-muted">Chọn màu chữ hiển thị trên nền màu</small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Xem trước màu sắc</label>
+                                            <div id="color-preview" style="padding: 20px; border-radius: 5px; text-align: center; font-weight: bold; background-color: #ffffff; color: #000000;">
+                                                Màu sắc mẫu
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
                                             <label for="is_active">Status</label>
                                             <select name="is_active" id="is_active" class="form-control">
                                                 <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>Active</option>
@@ -74,3 +95,31 @@
 
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const colorCodeInput = document.getElementById('color_code');
+        const colorTextInput = document.getElementById('color_text');
+        const colorPreview = document.getElementById('color-preview');
+        const colorNameInput = document.getElementById('color_name');
+
+        function updatePreview() {
+            const backgroundColor = colorCodeInput.value;
+            const textColor = colorTextInput.value;
+            const colorName = colorNameInput.value || 'Màu sắc mẫu';
+            
+            colorPreview.style.backgroundColor = backgroundColor;
+            colorPreview.style.color = textColor;
+            colorPreview.textContent = colorName;
+        }
+
+        colorCodeInput.addEventListener('input', updatePreview);
+        colorTextInput.addEventListener('input', updatePreview);
+        colorNameInput.addEventListener('input', updatePreview);
+        
+        // Initial preview update
+        updatePreview();
+    });
+</script>
+@endpush

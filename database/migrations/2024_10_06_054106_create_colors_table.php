@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('color_name',100);
             $table->string('slug')->unique();
             $table->boolean('is_active')->default(true);
-
+            $table->string('color_code')->default('#ffffff');
+            $table->string('color_text')->default('#000000');
             $table->timestamps();
         });
     }

@@ -24,3 +24,22 @@ Stack trace:
 [15-Jan-2026 03:28:00 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
 [17-Jan-2026 07:10:02 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
 [17-Jan-2026 07:10:36 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
+[19-Jan-2026 09:28:40 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
+[19-Jan-2026 09:28:45 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
+[19-Jan-2026 14:49:15 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
+[19-Jan-2026 14:51:52 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
+[19-Jan-2026 15:10:56 UTC] PHP Fatal error:  Uncaught RuntimeException: Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.2.0". You are running 8.1.34. in /home/huynhdz2006/public_html/duanshop/vendor/composer/platform_check.php:26
+Stack trace:
+#0 /home/huynhdz2006/public_html/duanshop/vendor/composer/autoload_real.php(25): require()
+#1 /home/huynhdz2006/public_html/duanshop/vendor/autoload.php(22): ComposerAutoloaderInitc5eb40b9fefcfb4f7ad5bfdbde2e7189::getLoader()
+#2 /home/huynhdz2006/public_html/duanshop/artisan(18): require('/home/huynhdz20...')
+#3 {main}
+  thrown in /home/huynhdz2006/public_html/duanshop/vendor/composer/platform_check.php on line 26
+[19-Jan-2026 15:10:59 UTC] PHP Warning:  PHP Startup: session.gc_divisor must be greater than 0 in Unknown on line 0
+[22-Jan-2026 07:28:41 UTC] PHP Fatal error:  Uncaught RuntimeException: Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.2.0". You are running 8.1.34. in /home/huynhdz2006/public_html/duanshop/vendor/composer/platform_check.php:26
+Stack trace:
+#0 /home/huynhdz2006/public_html/duanshop/vendor/composer/autoload_real.php(25): require()
+#1 /home/huynhdz2006/public_html/duanshop/vendor/autoload.php(22): ComposerAutoloaderInitc5eb40b9fefcfb4f7ad5bfdbde2e7189::getLoader()
+#2 /home/huynhdz2006/public_html/duanshop/artisan(18): require('/home/huynhdz20...')
+#3 {main}
+  thrown in /home/huynhdz2006/public_html/duanshop/vendor/composer/platform_check.php on line 26
