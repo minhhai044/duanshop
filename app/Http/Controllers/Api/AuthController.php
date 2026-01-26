@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @group Authentication
+ * 
+ * APIs for managing user authentication
+ */
 class AuthController extends Controller
 {
 
@@ -24,6 +29,35 @@ class AuthController extends Controller
     {
         $this->authService = $authService;
     }
+
+    /**
+     * User Login
+     * 
+     * Authenticate user and return access token
+     * 
+     * @bodyParam email string required User email. Example: user@example.com
+     * @bodyParam password string required User password. Example: password123
+     * @bodyParam remember boolean Remember login session. Example: true
+     * 
+     * @response 200 {
+     *   "status": true,
+     *   "message": "Đăng nhập thành công!",
+     *   "data": {
+     *     "user": {
+     *       "id": 1,
+     *       "name": "John Doe",
+     *       "email": "user@example.com"
+     *     },
+     *     "access_token": "1|abc123...",
+     *     "token_type": "Bearer"
+     *   }
+     * }
+     * 
+     * @response 401 {
+     *   "status": false,
+     *   "message": "Thông tin đăng nhập không đúng hoặc tài khoản bị khóa."
+     * }
+     */
     public function login(LoginRequest $request)
     {
         try {
@@ -56,6 +90,33 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Complete Registration
+     * 
+     * Complete user registration by verifying OTP
+     * 
+     * @bodyParam slug string required User slug from verify-otp response. Example: john-doe-123
+     * @bodyParam otp string required OTP code sent to email. Example: 123456
+     * 
+     * @response 201 {
+     *   "status": true,
+     *   "message": "Đăng ký thành công",
+     *   "data": {
+     *     "user": {
+     *       "id": 1,
+     *       "name": "John Doe",
+     *       "email": "user@example.com"
+     *     },
+     *     "access_token": "1|abc123...",
+     *     "token_type": "Bearer"
+     *   }
+     * }
+     * 
+     * @response 400 {
+     *   "status": false,
+     *   "message": "Mã OTP không đúng."
+     * }
+     */
     public function register(Request $request)
     {
 
@@ -98,6 +159,24 @@ class AuthController extends Controller
     }
 
 
+    /**
+     * User Logout
+     * 
+     * Logout user and revoke access token
+     * 
+     * @authenticated
+     * 
+     * @response 200 {
+     *   "status": true,
+     *   "message": "Đăng xuất thành công.",
+     *   "data": []
+     * }
+     * 
+     * @response 401 {
+     *   "status": false,
+     *   "message": "Người dùng không được xác thực."
+     * }
+     */
     public function logout(Request $request)
     {
         try {
@@ -120,6 +199,32 @@ class AuthController extends Controller
     }
 
 
+    /**
+     * Verify OTP and Create Account
+     * 
+     * Send OTP to email for account verification
+     * 
+     * @bodyParam email string required User email. Example: user@example.com
+     * @bodyParam name string required User full name. Example: John Doe
+     * @bodyParam password string required User password (min 8 chars). Example: password123
+     * @bodyParam password_confirmation string required Password confirmation. Example: password123
+     * 
+     * @response 200 {
+     *   "status": true,
+     *   "message": "OTP đã được gửi đến email của bạn.",
+     *   "data": {
+     *     "slug": "john-doe-123",
+     *     "user_id": 1,
+     *     "name": "John Doe",
+     *     "email": "user@example.com"
+     *   }
+     * }
+     * 
+     * @response 422 {
+     *   "status": false,
+     *   "message": "Email không hợp lệ."
+     * }
+     */
     public function verifyOtp(Request $request)
     {
 
@@ -191,6 +296,27 @@ class AuthController extends Controller
     }
 
 
+    /**
+     * Forgot Password
+     * 
+     * Send OTP to email for password reset
+     * 
+     * @bodyParam email string required User email. Example: user@example.com
+     * 
+     * @response 200 {
+     *   "status": true,
+     *   "message": "OTP đã được gửi đến email của bạn.",
+     *   "data": {
+     *     "email": "user@example.com",
+     *     "slug": "john-doe-123"
+     *   }
+     * }
+     * 
+     * @response 404 {
+     *   "status": false,
+     *   "message": "Email không tồn tại."
+     * }
+     */
     public function forgotPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -227,6 +353,25 @@ class AuthController extends Controller
         ], 'OTP đã được gửi đến email của bạn.');
     }
 
+    /**
+     * Reset Password
+     * 
+     * Reset user password using OTP verification
+     * 
+     * @bodyParam slug string required User slug from forgot-password response. Example: john-doe-123
+     * @bodyParam otp string required OTP code sent to email. Example: 123456
+     * 
+     * @response 201 {
+     *   "status": true,
+     *   "message": "Mật khẩu đã được đặt lại thành công.",
+     *   "data": []
+     * }
+     * 
+     * @response 400 {
+     *   "status": false,
+     *   "message": "Mã OTP không đúng."
+     * }
+     */
     public function resetPassword(Request $request)
     {
 
@@ -267,6 +412,29 @@ class AuthController extends Controller
 
 
 
+    /**
+     * Resend OTP
+     * 
+     * Resend OTP code to user email
+     * 
+     * @bodyParam slug string required User slug. Example: john-doe-123
+     * @bodyParam key string required OTP type (register or forgot_password). Example: register
+     * 
+     * @response 200 {
+     *   "status": true,
+     *   "message": "OTP đã được gửi lại.",
+     *   "data": {
+     *     "slug": "john-doe-123",
+     *     "email": "user@example.com",
+     *     "key": "register"
+     *   }
+     * }
+     * 
+     * @response 429 {
+     *   "status": false,
+     *   "message": "Vui lòng chờ 30 giây rồi thử gửi lại OTP."
+     * }
+     */
     public function resendOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [

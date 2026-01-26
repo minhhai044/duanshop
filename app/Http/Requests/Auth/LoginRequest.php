@@ -38,9 +38,9 @@ class LoginRequest extends FormRequest
     public function rulesForCreate()
     {
         return [
-            'email' => ['required', 'string', 'email:rfc,dns'],
+            'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string', 'min:6'],
-            'remember' => ['required']
+            'remember' => ['boolean']
             // nếu bạn login bằng username/sdt thì thêm field tương ứng ở đây
         ];
     }
@@ -58,6 +58,27 @@ class LoginRequest extends FormRequest
             'email.email' => 'Email không đúng định dạng.',
             'password.required' => 'Vui lòng nhập mật khẩu.',
             'password.min' => 'Mật khẩu tối thiểu :min ký tự.',
+        ];
+    }
+
+    /**
+     * Get the body parameters for Scribe documentation
+     */
+    public function bodyParameters()
+    {
+        return [
+            'email' => [
+                'description' => 'User email address',
+                'example' => 'user@example.com',
+            ],
+            'password' => [
+                'description' => 'User password (minimum 6 characters)',
+                'example' => 'password123',
+            ],
+            'remember' => [
+                'description' => 'Remember login session',
+                'example' => true,
+            ],
         ];
     }
 }
